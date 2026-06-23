@@ -3,43 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coleção do João</title>
+  <title>JP Garage</title>
   <link rel="apple-touch-icon" href="icon.svg">
   <link rel="icon" href="icon.svg">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Carrinhos JP">
+  <meta name="apple-mobile-web-app-title" content="JP Garage">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#e84118">
+  <meta name="theme-color" content="#1a1a1a">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f2f2f7;
-      color: #1c1c1e;
+      background: #111111;
+      color: #ffffff;
     }
 
     /* ── Header ── */
     header {
-      background: #e84118;
-      color: white;
+      background: #1a1a1a;
       padding: 16px 20px 14px;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 10px rgba(232,65,24,0.35);
+      border-bottom: 2px solid #f5c400;
     }
-    header h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; }
-    header p  { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+    header h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; color: #f5c400; }
+    header p  { font-size: 13px; color: #888; margin-top: 2px; }
 
     /* ── Filters ── */
     .filters {
-      background: white;
+      background: #1a1a1a;
       padding: 12px 14px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      border-bottom: 1px solid #e5e5ea;
+      border-bottom: 1px solid #2a2a2a;
       position: sticky;
       top: 62px;
       z-index: 99;
@@ -47,30 +46,30 @@
 
     .filter-select {
       appearance: none;
-      background: #f2f2f7;
-      border: none;
+      background: #2a2a2a;
+      border: 1px solid #333;
       border-radius: 10px;
       padding: 9px 32px 9px 12px;
       font-size: 14px;
-      color: #1c1c1e;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      color: #ccc;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 11px center;
       cursor: pointer;
       font-family: inherit;
     }
-    .filter-select:focus { outline: 2px solid #e84118; }
-    .filter-select.active { background-color: #fff3ee; color: #e84118; font-weight: 600; }
+    .filter-select:focus { outline: 2px solid #f5c400; }
+    .filter-select.active { background-color: #2a2200; color: #f5c400; border-color: #f5c40066; font-weight: 600; }
 
     .btn-clear {
       grid-column: 1 / -1;
       display: none;
       background: none;
-      border: 1.5px dashed #ccc;
+      border: 1.5px dashed #333;
       border-radius: 10px;
       padding: 8px;
       font-size: 13px;
-      color: #888;
+      color: #666;
       cursor: pointer;
       font-family: inherit;
     }
@@ -80,7 +79,7 @@
     .results-bar {
       padding: 8px 16px;
       font-size: 12px;
-      color: #8e8e93;
+      color: #666;
       min-height: 30px;
     }
 
@@ -93,20 +92,20 @@
     }
 
     .car-card {
-      background: white;
+      background: #1e1e1e;
       border-radius: 14px;
       padding: 12px 12px 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      border: 1px solid #2a2a2a;
       cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
+      transition: transform 0.12s, border-color 0.12s;
       -webkit-tap-highlight-color: transparent;
     }
     .car-card:active {
       transform: scale(0.975);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      border-color: #f5c40066;
     }
 
     .car-info { flex: 1; min-width: 0; }
@@ -114,6 +113,7 @@
     .car-name {
       font-size: 15px;
       font-weight: 600;
+      color: #fff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -130,11 +130,11 @@
       font-size: 11px;
       padding: 2px 8px;
       border-radius: 20px;
-      background: #f2f2f7;
-      color: #555;
+      background: #2a2a2a;
+      color: #888;
       white-space: nowrap;
     }
-    .tag.comercial { background: #fff3ee; color: #e84118; font-weight: 600; }
+    .tag.comercial { background: #e8411822; color: #e84118; font-weight: 600; }
 
     .car-thumb {
       width: 72px;
@@ -142,13 +142,13 @@
       border-radius: 10px;
       object-fit: cover;
       flex-shrink: 0;
-      background: #f2f2f7;
+      background: #2a2a2a;
     }
     .car-thumb-empty {
       width: 72px;
       height: 72px;
       border-radius: 10px;
-      background: #f2f2f7;
+      background: #2a2a2a;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -160,7 +160,7 @@
     .state-message {
       text-align: center;
       padding: 64px 24px;
-      color: #8e8e93;
+      color: #555;
     }
     .state-message .icon { font-size: 52px; margin-bottom: 12px; }
     .state-message p { font-size: 15px; }
@@ -170,7 +170,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.8);
       z-index: 200;
       align-items: flex-end;
       justify-content: center;
@@ -179,7 +179,7 @@
     .modal-overlay.open { display: flex; }
 
     .modal {
-      background: white;
+      background: #1e1e1e;
       border-radius: 20px 20px 0 0;
       padding: 20px 20px 36px;
       width: 100%;
@@ -187,6 +187,7 @@
       max-height: 88vh;
       overflow-y: auto;
       animation: slideUp 0.25s ease;
+      border-top: 2px solid #f5c400;
     }
 
     @keyframes slideUp {
@@ -197,7 +198,7 @@
     .modal-handle {
       width: 40px;
       height: 4px;
-      background: #e0e0e0;
+      background: #333;
       border-radius: 4px;
       margin: 0 auto 18px;
     }
@@ -205,6 +206,7 @@
     .modal-name {
       font-size: 20px;
       font-weight: 700;
+      color: #f5c400;
       margin-bottom: 10px;
     }
 
@@ -218,10 +220,10 @@
       font-size: 13px;
       padding: 4px 12px;
       border-radius: 20px;
-      background: #f2f2f7;
-      color: #444;
+      background: #2a2a2a;
+      color: #aaa;
     }
-    .modal-tag.comercial { background: #fff3ee; color: #e84118; }
+    .modal-tag.comercial { background: #e8411822; color: #e84118; }
 
     .photo-grid {
       display: grid;
@@ -238,13 +240,13 @@
     .photo-label {
       text-align: center;
       font-size: 11px;
-      color: #8e8e93;
+      color: #666;
       margin-top: 5px;
     }
     .no-photos {
       text-align: center;
       padding: 24px;
-      color: #aaa;
+      color: #555;
       font-size: 14px;
     }
   </style>
@@ -252,7 +254,7 @@
 <body>
 
 <header>
-  <h1>🚗 Coleção do João</h1>
+  <h1>🚗 JP Garage</h1>
   <p id="total-label">Carregando...</p>
 </header>
 
