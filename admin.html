@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Carrinhos JP</title>
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" href="icon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Admin JP">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1c1c1e">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f2f2f7;
+      color: #1c1c1e;
+      min-height: 100vh;
+    }
+
+    /* ── Login ── */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .login-box {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .login-box .icon { font-size: 52px; margin-bottom: 14px; }
+    .login-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .login-box .subtitle { font-size: 14px; color: #8e8e93; margin-bottom: 28px; }
+    .login-error {
+      color: #e84118;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1c1c1e;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 { font-size: 18px; font-weight: 700; }
+
+    .btn-logout {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ── Tab bar ── */
+    .tabs {
+      background: white;
+      display: flex;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    .tab {
+      flex: 1;
+      padding: 13px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8e8e93;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab.active {
+      color: #e84118;
+      border-bottom-color: #e84118;
+      font-weight: 600;
+    }
+
+    /* ── Form ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .form-wrap {
+      padding: 16px 16px 40px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #8e8e93;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin: 22px 0 10px;
+    }
+
+    .field { margin-bottom: 10px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3a3a3c;
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 12px;
+      font-size: 16px; /* 16px evita zoom automático no iOS */
+      background: white;
+      color: #1c1c1e;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: #e84118;
+    }
+
+    /* ── Photo upload ── */
+    .photo-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .photo-slot {
+      position: relative;
+      border: 2px dashed #d1d1d6;
+      border-radius: 14px;
+      background: white;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      overflow: hidden;
+    }
+    .photo-slot.done { border-style: solid; border-color: #34c759; }
+    .photo-slot input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      font-size: 0;
+    }
+    .photo-slot .slot-icon { font-size: 32px; pointer-events: none; }
+    .photo-slot .slot-label {
+      font-size: 11px;
+      color: #8e8e93;
+      font-weight: 500;
+      margin-top: 6px;
+      text-align: center;
+      padding: 0 6px;
+      pointer-events: none;
+    }
+    .photo-slot .slot-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      border-radius: 12px;
+    }
+    .photo-slot.done .slot-preview { display: block; }
+    .photo-slot .slot-badge {
+      display: none;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #34c759;
+      color: white;
+      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .photo-slot.done .slot-badge { display: flex; }
+
+    /* ── Buttons ── */
+    .btn-save {
+      width: 100%;
+      background: #e84118;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 17px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+      font-family: inherit;
+      transition: opacity 0.2s;
+    }
+    .btn-save:disabled { opacity: 0.45; cursor: default; }
+    .btn-save:active:not(:disabled) { opacity: 0.85; }
+
+    .btn-primary {
+      width: 100%;
+      background: #e84118;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 17px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ── List panel ── */
+    .car-list-admin {
+      padding: 12px 14px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .admin-card {
+      background: white;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .admin-card-info { flex: 1; min-width: 0; }
+    .admin-card-name { font-size: 15px; font-weight: 600; }
+    .admin-card-sub  { font-size: 12px; color: #8e8e93; margin-top: 2px; }
+    .admin-thumb {
+      width: 56px; height: 56px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #f2f2f7;
+      flex-shrink: 0;
+    }
+    .admin-thumb-empty {
+      width: 56px; height: 56px;
+      border-radius: 8px;
+      background: #f2f2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .list-count {
+      padding: 10px 16px 4px;
+      font-size: 12px;
+      color: #8e8e93;
+    }
+
+    /* ── Loading overlay ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .overlay.active { display: flex; }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid rgba(255,255,255,0.25);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1c1c1e;
+      color: white;
+      padding: 13px 22px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      white-space: nowrap;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .state-message {
+      text-align: center;
+      padding: 64px 24px;
+      color: #8e8e93;
+    }
+    .state-message .icon { font-size: 48px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOGIN ════════════════════════════════════════════════ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="icon">🔐</div>
+    <h2>Área Admin</h2>
+    <p class="subtitle">Acesso restrito para cadastro de carrinhos</p>
+    <div class="field">
+      <input type="password" id="pwd-input" placeholder="Senha"
+             onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+    <p class="login-error" id="login-error">Senha incorreta. Tente novamente.</p>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ═══════════════════════════════════════════ -->
+<div id="admin-panel" style="display:none">
+
+  <header>
+    <h1>⚙️ Admin</h1>
+    <button class="btn-logout" onclick="doLogout()">Sair</button>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('add')">➕ Adicionar</div>
+    <div class="tab"        onclick="switchTab('list')">📋 Coleção</div>
+  </div>
+
+  <!-- ── ABA: Adicionar ── -->
+  <div class="panel active" id="panel-add">
+    <div class="form-wrap">
+
+      <div class="section-label">Identificação</div>
+
+      <div class="field">
+        <label>Marca Comercial</label>
+        <input type="text" id="i-comercial" placeholder="Ex: Hot Wheels"
+               list="dl-comercial" autocomplete="off">
+        <datalist id="dl-comercial"></datalist>
+      </div>
+
+      <div class="field">
+        <label>Marca do Carro</label>
+        <input type="text" id="i-marca" placeholder="Ex: Ford"
+               list="dl-marca" autocomplete="off">
+        <datalist id="dl-marca"></datalist>
+      </div>
+
+      <div class="field">
+        <label>Modelo <span style="color:#e84118">*</span></label>
+        <input type="text" id="i-modelo" placeholder="Ex: Fusion"
+               list="dl-modelo" autocomplete="off">
+        <datalist id="dl-modelo"></datalist>
+      </div>
+
+      <div class="field">
+        <label>Cor</label>
+        <input type="text" id="i-cor" placeholder="Ex: Preto"
+               list="dl-cor" autocomplete="off">
+        <datalist id="dl-cor"></datalist>
+      </div>
+
+      <div class="section-label">Fotos</div>
+
+      <div class="photo-row">
+        <div class="photo-slot" id="slot-carroceria">
+          <span class="slot-icon">📷</span>
+          <span class="slot-label">Foto da Carroceria</span>
+          <img class="slot-preview" id="prev-carroceria" alt="">
+          <span class="slot-badge">✓</span>
+          <input type="file" accept="image/*" capture="environment"
+                 onchange="handlePhoto(this,'carroceria')">
+        </div>
+        <div class="photo-slot" id="slot-fundo">
+          <span class="slot-icon">🔍</span>
+          <span class="slot-label">Foto do Fundo</span>
+          <img class="slot-preview" id="prev-fundo" alt="">
+          <span class="slot-badge">✓</span>
+          <input type="file" accept="image/*" capture="environment"
+                 onchange="handlePhoto(this,'fundo')">
+        </div>
+      </div>
+
+      <button class="btn-save" id="btn-save" onclick="salvar()">
+        Salvar Carrinho
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ── ABA: Coleção ── -->
+  <div class="panel" id="panel-list">
+    <div class="list-count" id="list-count"></div>
+    <div class="car-list-admin" id="admin-car-list">
+      <div class="state-message"><div class="icon">⏳</div><p>Carregando...</p></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Overlay de loading -->
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <span id="overlay-text">Salvando...</span>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  CONFIGURAÇÃO — preencha com seus dados
+// ─────────────────────────────────────────────────────────────
+const ADMIN_PASSWORD       = '159075';
+const CLOUDINARY_CLOUD     = 'djyrz7jf5';
+const CLOUDINARY_PRESET    = 'jm2bpefb';
+const APPS_SCRIPT_URL      = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
+const SHEET_CSV_URL        = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
+// ─────────────────────────────────────────────────────────────
+
+let photos  = { carroceria: null, fundo: null };
+let carData = [];
+
+// ══ AUTH ═══════════════════════════════════════════════════
+function doLogin() {
+  if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('jp_admin', '1');
+    showPanel();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('jp_admin');
+  location.reload();
+}
+
+function showPanel() {
+  document.getElementById('login-screen').style.display  = 'none';
+  document.getElementById('admin-panel').style.display   = 'block';
+  loadData();
+}
+
+if (sessionStorage.getItem('jp_admin')) showPanel();
+
+// ══ DATA ═══════════════════════════════════════════════════
+async function loadData() {
+  try {
+    const res  = await fetch(SHEET_CSV_URL);
+    const text = await res.text();
+    carData = parseCSV(text);
+    populateAutocomplete();
+    renderAdminList();
+  } catch {
+    toast('⚠️ Não foi possível carregar os dados.');
+  }
+}
+
+function parseCSV(raw) {
+  const rows    = raw.trim().split('\n');
+  const headers = splitLine(rows[0]).map(h => h.trim());
+  return rows.slice(1).map(row => {
+    const vals = splitLine(row);
+    const obj  = {};
+    headers.forEach((h, i) => obj[h] = (vals[i] || '').trim());
+    return obj;
+  }).filter(c => c.modelo || c.marca_comercial);
+}
+
+function splitLine(line) {
+  const out = []; let cur = ''; let q = false;
+  for (const ch of line) {
+    if (ch === '"')       q = !q;
+    else if (ch === ',' && !q) { out.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  out.push(cur); return out;
+}
+
+function populateAutocomplete() {
+  const map = {
+    'dl-comercial': 'marca_comercial',
+    'dl-marca':     'marca_carro',
+    'dl-modelo':    'modelo',
+    'dl-cor':       'cor'
+  };
+  Object.entries(map).forEach(([dlId, field]) => {
+    const values = [...new Set(carData.map(c => c[field]).filter(Boolean))].sort();
+    document.getElementById(dlId).innerHTML =
+      values.map(v => `<option value="${v}">`).join('');
+  });
+}
+
+function renderAdminList() {
+  const list = document.getElementById('admin-car-list');
+  document.getElementById('list-count').textContent =
+    `${carData.length} carrinhos cadastrados`;
+
+  if (!carData.length) {
+    list.innerHTML = '<div class="state-message"><div class="icon">📭</div><p>Nenhum carrinho ainda</p></div>';
+    return;
+  }
+
+  list.innerHTML = [...carData].reverse().map(car => {
+    const thumb = car.foto_carroceria
+      ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
+      : `<div class="admin-thumb-empty">🚗</div>`;
+
+    const sub = [car.marca_comercial, car.marca_carro, car.cor]
+      .filter(Boolean).join(' · ');
+
+    return `
+      <div class="admin-card">
+        ${thumb}
+        <div class="admin-card-info">
+          <div class="admin-card-name">${car.modelo || '—'}</div>
+          <div class="admin-card-sub">${sub || '—'}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ══ TABS ═══════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) =>
+    t.classList.toggle('active', (i === 0) === (name === 'add')));
+  document.getElementById('panel-add').classList.toggle('active',  name === 'add');
+  document.getElementById('panel-list').classList.toggle('active', name === 'list');
+}
+
+// ══ PHOTOS ═════════════════════════════════════════════════
+function handlePhoto(input, type) {
+  const file = input.files[0];
+  if (!file) return;
+  photos[type] = file;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById(`prev-${type}`).src = e.target.result;
+    document.getElementById(`slot-${type}`).classList.add('done');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══ UPLOAD & SAVE ══════════════════════════════════════════
+async function uploadImg(file) {
+  const fd = new FormData();
+  fd.append('file',           file);
+  fd.append('upload_preset',  CLOUDINARY_PRESET);
+  fd.append('folder',         'carrinhos-joao');
+
+  const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+    method: 'POST', body: fd
+  });
+  const data = await res.json();
+  if (!data.secure_url) throw new Error('Cloudinary falhou');
+  return data.secure_url;
+}
+
+async function salvar() {
+  const modelo = document.getElementById('i-modelo').value.trim();
+  if (!modelo) { toast('⚠️ O campo Modelo é obrigatório.'); return; }
+
+  setLoading(true, 'Enviando fotos...');
+
+  try {
+    let urlCar = '', urlFundo = '';
+
+    if (photos.carroceria) urlCar   = await uploadImg(photos.carroceria);
+    if (photos.fundo)      { setLoadingText('Enviando segunda foto...'); urlFundo = await uploadImg(photos.fundo); }
+
+    setLoadingText('Salvando no catálogo...');
+
+    await fetch(APPS_SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        marca_comercial: document.getElementById('i-comercial').value.trim(),
+        marca_carro:     document.getElementById('i-marca').value.trim(),
+        modelo,
+        cor:             document.getElementById('i-cor').value.trim(),
+        foto_carroceria: urlCar,
+        foto_fundo:      urlFundo
+      })
+    });
+
+    setLoading(false);
+    toast('✅ Carrinho salvo com sucesso!');
+    resetForm();
+    await loadData();
+
+  } catch (err) {
+    setLoading(false);
+    toast('❌ Erro ao salvar. Tente novamente.');
+    console.error(err);
+  }
+}
+
+function resetForm() {
+  ['i-comercial','i-marca','i-modelo','i-cor'].forEach(id =>
+    document.getElementById(id).value = '');
+  ['carroceria','fundo'].forEach(type => {
+    photos[type] = null;
+    document.getElementById(`prev-${type}`).src = '';
+    document.getElementById(`slot-${type}`).classList.remove('done');
+  });
+}
+
+// ══ UI HELPERS ═════════════════════════════════════════════
+function setLoading(on, text = '') {
+  document.getElementById('overlay').classList.toggle('active', on);
+  document.getElementById('btn-save').disabled = on;
+  if (text) document.getElementById('overlay-text').textContent = text;
+}
+function setLoadingText(t) { document.getElementById('overlay-text').textContent = t; }
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+</script>
+
+</body>
+</html>
