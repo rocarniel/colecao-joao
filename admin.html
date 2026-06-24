@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JP Garage — Admin</title>
-  <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="icon" href="icon.svg">
+  <link rel="apple-touch-icon" id="touch-icon">
+  <link rel="icon" id="fav-icon">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="JP Garage Admin">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -397,7 +397,7 @@
       <div class="section-label">Identificação</div>
 
       <div class="field">
-        <label>Marca Comercial</label>
+        <label>Marca Comercial <span style="color:#e84118">*</span></label>
         <div class="ac-wrap">
           <input type="text" id="i-comercial" placeholder="Ex: Hot Wheels"
                  autocomplete="off" oninput="acFilter('i-comercial','ac-comercial','marca_comercial')"
@@ -407,7 +407,7 @@
       </div>
 
       <div class="field">
-        <label>Marca do Carro</label>
+        <label>Marca do Carro <span style="color:#e84118">*</span></label>
         <div class="ac-wrap">
           <input type="text" id="i-marca" placeholder="Ex: Ford"
                  autocomplete="off" oninput="acFilter('i-marca','ac-marca','marca_carro')"
@@ -427,7 +427,7 @@
       </div>
 
       <div class="field">
-        <label>Cor</label>
+        <label>Cor <span style="color:#e84118">*</span></label>
         <div class="ac-wrap">
           <input type="text" id="i-cor" placeholder="Ex: Preto"
                  autocomplete="off" oninput="acFilter('i-cor','ac-cor','cor')"
@@ -521,6 +521,52 @@ function showPanel() {
 }
 
 if (sessionStorage.getItem('jp_admin')) showPanel();
+
+function generateIcon() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 180;
+  const x = c.getContext('2d');
+
+  x.beginPath(); x.roundRect(0, 0, 180, 180, 38);
+  x.fillStyle = '#1a56db'; x.fill();
+
+  x.beginPath(); x.roundRect(18, 98, 144, 46, 10);
+  x.fillStyle = '#2563eb'; x.fill();
+
+  x.beginPath();
+  x.moveTo(48, 98); x.bezierCurveTo(52, 72, 62, 60, 78, 57);
+  x.lineTo(102, 57); x.bezierCurveTo(118, 60, 128, 72, 132, 98);
+  x.closePath(); x.fillStyle = '#3b82f6'; x.fill();
+
+  x.beginPath();
+  x.moveTo(57, 92); x.lineTo(88, 92); x.lineTo(88, 62); x.lineTo(76, 62);
+  x.bezierCurveTo(64, 65, 57, 78, 55, 95); x.closePath();
+  x.fillStyle = '#bfdbfe'; x.fill();
+
+  x.beginPath();
+  x.moveTo(123, 92); x.lineTo(92, 92); x.lineTo(92, 62); x.lineTo(104, 62);
+  x.bezierCurveTo(116, 65, 123, 78, 125, 95); x.closePath();
+  x.fillStyle = '#bfdbfe'; x.fill();
+
+  [[52, 148], [128, 148]].forEach(([cx, cy]) => {
+    x.beginPath(); x.arc(cx, cy, 19, 0, Math.PI*2); x.fillStyle = '#111827'; x.fill();
+    x.beginPath(); x.arc(cx, cy, 11, 0, Math.PI*2); x.fillStyle = '#374151'; x.fill();
+    x.beginPath(); x.arc(cx, cy, 5,  0, Math.PI*2); x.fillStyle = '#9ca3af'; x.fill();
+  });
+
+  x.beginPath(); x.roundRect(19, 106, 18, 9, 4); x.fillStyle = '#fef08a'; x.fill();
+  x.beginPath(); x.roundRect(143, 106, 18, 9, 4); x.fillStyle = '#fca5a5'; x.fill();
+
+  x.fillStyle = '#ffffff';
+  x.font = 'bold 28px Arial Black, Arial';
+  x.textAlign = 'center';
+  x.fillText('JP', 54, 130);
+
+  const url = c.toDataURL('image/png');
+  document.getElementById('touch-icon').href = url;
+  document.getElementById('fav-icon').href   = url;
+}
+generateIcon();
 
 // ══ DATA ═══════════════════════════════════════════════════
 async function loadData() {
@@ -661,8 +707,15 @@ async function uploadImg(file) {
 }
 
 async function salvar() {
-  const modelo = document.getElementById('i-modelo').value.trim();
-  if (!modelo) { toast('⚠️ O campo Modelo é obrigatório.'); return; }
+  const comercial = document.getElementById('i-comercial').value.trim();
+  const marca     = document.getElementById('i-marca').value.trim();
+  const modelo    = document.getElementById('i-modelo').value.trim();
+  const cor       = document.getElementById('i-cor').value.trim();
+
+  if (!comercial) { toast('⚠️ Informe a Marca Comercial.'); return; }
+  if (!marca)     { toast('⚠️ Informe a Marca do Carro.'); return; }
+  if (!modelo)    { toast('⚠️ Informe o Modelo.'); return; }
+  if (!cor)       { toast('⚠️ Informe a Cor.'); return; }
 
   setLoading(true, 'Enviando fotos...');
 
@@ -679,10 +732,10 @@ async function salvar() {
       mode:    'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
-        marca_comercial: document.getElementById('i-comercial').value.trim(),
-        marca_carro:     document.getElementById('i-marca').value.trim(),
+        marca_comercial: comercial,
+        marca_carro:     marca,
         modelo,
-        cor:             document.getElementById('i-cor').value.trim(),
+        cor,
         foto_carroceria: urlCar,
         foto_fundo:      urlFundo
       })
