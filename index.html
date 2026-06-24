@@ -28,22 +28,74 @@
       z-index: 100;
       border-bottom: 2px solid #f5c400;
     }
-    header h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; color: #f5c400; }
+    header h1 { font-size: 21px; font-weight: 700; color: #f5c400; letter-spacing: -0.3px; }
     header p  { font-size: 13px; color: #888; margin-top: 2px; }
+
+    /* ── Search ── */
+    .search-bar {
+      background: #1a1a1a;
+      padding: 10px 14px;
+      position: sticky;
+      top: 62px;
+      z-index: 99;
+      border-bottom: 1px solid #222;
+    }
+    .search-input {
+      width: 100%;
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 10px 14px 10px 38px;
+      font-size: 15px;
+      color: #fff;
+      font-family: inherit;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+    .search-input::placeholder { color: #555; }
+    .search-input:focus { outline: 2px solid #f5c400; border-color: transparent; }
+
+    /* ── Status tabs ── */
+    .status-tabs {
+      background: #1a1a1a;
+      padding: 8px 14px;
+      display: flex;
+      gap: 8px;
+      position: sticky;
+      top: 115px;
+      z-index: 98;
+      border-bottom: 1px solid #222;
+    }
+    .status-tab {
+      flex: 1;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #2a2a2a;
+      color: #888;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .status-tab.active        { background: #f5c40015; color: #f5c400; border-color: #f5c40066; }
+    .status-tab.active.quer   { background: #e8411820; color: #e84118; border-color: #e8411866; }
 
     /* ── Filters ── */
     .filters {
       background: #1a1a1a;
-      padding: 12px 14px;
+      padding: 10px 14px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      border-bottom: 1px solid #2a2a2a;
+      border-bottom: 1px solid #222;
       position: sticky;
-      top: 62px;
-      z-index: 99;
+      top: 163px;
+      z-index: 97;
     }
-
     .filter-select {
       appearance: none;
       background: #2a2a2a;
@@ -102,14 +154,12 @@
       cursor: pointer;
       transition: transform 0.12s, border-color 0.12s;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
     }
-    .car-card:active {
-      transform: scale(0.975);
-      border-color: #f5c40066;
-    }
+    .car-card:active { transform: scale(0.975); border-color: #f5c40066; }
+    .car-card.quer   { border-color: #e8411833; }
 
     .car-info { flex: 1; min-width: 0; }
-
     .car-name {
       font-size: 15px;
       font-weight: 600;
@@ -118,14 +168,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .car-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
       margin-top: 5px;
     }
-
     .tag {
       font-size: 11px;
       padding: 2px 8px;
@@ -135,6 +183,19 @@
       white-space: nowrap;
     }
     .tag.comercial { background: #e8411822; color: #e84118; font-weight: 600; }
+
+    /* Wishlist badge */
+    .wish-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #f5c400;
+      color: #1a1a1a;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
 
     .car-thumb {
       width: 72px;
@@ -156,7 +217,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Empty / Loading ── */
+    /* ── States ── */
     .state-message {
       text-align: center;
       padding: 64px 24px;
@@ -174,10 +235,8 @@
       z-index: 200;
       align-items: flex-end;
       justify-content: center;
-      padding: 0;
     }
     .modal-overlay.open { display: flex; }
-
     .modal {
       background: #1e1e1e;
       border-radius: 20px 20px 0 0;
@@ -189,66 +248,25 @@
       animation: slideUp 0.25s ease;
       border-top: 2px solid #f5c400;
     }
-
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to   { transform: translateY(0); }
     }
-
     .modal-handle {
-      width: 40px;
-      height: 4px;
+      width: 40px; height: 4px;
       background: #333;
       border-radius: 4px;
       margin: 0 auto 18px;
     }
-
-    .modal-name {
-      font-size: 20px;
-      font-weight: 700;
-      color: #f5c400;
-      margin-bottom: 10px;
-    }
-
-    .modal-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 18px;
-    }
-    .modal-tag {
-      font-size: 13px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: #2a2a2a;
-      color: #aaa;
-    }
+    .modal-name { font-size: 20px; font-weight: 700; color: #f5c400; margin-bottom: 10px; }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .modal-tag  { font-size: 13px; padding: 4px 12px; border-radius: 20px; background: #2a2a2a; color: #aaa; }
     .modal-tag.comercial { background: #e8411822; color: #e84118; }
-
-    .photo-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .photo-item img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-    .photo-label {
-      text-align: center;
-      font-size: 11px;
-      color: #666;
-      margin-top: 5px;
-    }
-    .no-photos {
-      text-align: center;
-      padding: 24px;
-      color: #555;
-      font-size: 14px;
-    }
+    .modal-tag.quer      { background: #f5c40022; color: #f5c400; font-weight: 600; }
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .photo-item img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; }
+    .photo-label { text-align: center; font-size: 11px; color: #666; margin-top: 5px; }
+    .no-photos   { text-align: center; padding: 24px; color: #555; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -257,6 +275,18 @@
   <h1>🚗 JP Garage</h1>
   <p id="total-label">Carregando...</p>
 </header>
+
+<div class="search-bar">
+  <input class="search-input" type="search" id="search"
+         placeholder="Buscar por nome, marca ou modelo..."
+         oninput="applyFilters()" autocomplete="off">
+</div>
+
+<div class="status-tabs">
+  <button class="status-tab active" id="tab-todos" onclick="setStatus('todos')">Todos</button>
+  <button class="status-tab"        id="tab-tem"   onclick="setStatus('tem')">✅ Já tem</button>
+  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🎁 Quer ganhar</button>
+</div>
 
 <div class="filters">
   <select class="filter-select" id="f-comercial" onchange="applyFilters(this)">
@@ -279,7 +309,6 @@
   <div class="state-message"><div class="icon">⏳</div><p>Carregando coleção...</p></div>
 </div>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -290,55 +319,50 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────────────
-//  CONFIGURAÇÃO — preencha após criar a planilha
-// ─────────────────────────────────────────────────
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
-// ─────────────────────────────────────────────────
 
-let allCars = [];
+let allCars    = [];
+let statusMode = 'todos';
 
-// ── Fetch & parse ──────────────────────────────
 async function init() {
   try {
     const res  = await fetch(SHEET_CSV_URL);
     const text = await res.text();
     allCars = parseCSV(text);
     buildFilters();
-    render(allCars);
+    applyFilters();
+    const total = allCars.length;
+    const tem   = allCars.filter(c => c.status !== 'quer').length;
+    const quer  = allCars.filter(c => c.status === 'quer').length;
     document.getElementById('total-label').textContent =
-      `${allCars.length} carrinhos na coleção`;
+      `${tem} carrinhos · ${quer > 0 ? quer + ' na lista de desejos' : ''}`.trim().replace(/· $/, '');
   } catch {
     document.getElementById('car-list').innerHTML =
-      '<div class="state-message"><div class="icon">⚠️</div><p>Erro ao carregar. Verifique a conexão.</p></div>';
+      '<div class="state-message"><div class="icon">⚠️</div><p>Erro ao carregar. Tente novamente.</p></div>';
   }
 }
 
 function parseCSV(raw) {
-  const rows = raw.trim().split('\n');
-  const headers = splitCSVLine(rows[0]).map(h => h.trim());
-  return rows.slice(1)
-    .map(row => {
-      const vals = splitCSVLine(row);
-      const obj  = {};
-      headers.forEach((h, i) => obj[h] = (vals[i] || '').trim());
-      return obj;
-    })
-    .filter(c => c.modelo || c.marca_comercial);
+  const rows    = raw.trim().split('\n');
+  const headers = splitLine(rows[0]).map(h => h.trim());
+  return rows.slice(1).map(row => {
+    const vals = splitLine(row);
+    const obj  = {};
+    headers.forEach((h, i) => obj[h] = (vals[i] || '').trim());
+    return obj;
+  }).filter(c => c.modelo || c.marca_comercial);
 }
 
-function splitCSVLine(line) {
+function splitLine(line) {
   const out = []; let cur = ''; let q = false;
   for (const ch of line) {
     if (ch === '"')       q = !q;
     else if (ch === ',' && !q) { out.push(cur); cur = ''; }
     else cur += ch;
   }
-  out.push(cur);
-  return out;
+  out.push(cur); return out;
 }
 
-// ── Filters ────────────────────────────────────
 const FILTER_MAP = {
   'f-comercial': 'marca_comercial',
   'f-marca':     'marca_carro',
@@ -361,19 +385,34 @@ function buildFilters() {
   });
 }
 
+function setStatus(mode) {
+  statusMode = mode;
+  document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + mode).classList.add('active');
+  applyFilters();
+}
+
 function applyFilters(changed) {
-  changed.classList.toggle('active', changed.value !== '');
+  if (changed) changed.classList.toggle('active', changed.value !== '');
 
   const filters = Object.fromEntries(
     Object.entries(FILTER_MAP).map(([id, field]) => [field, document.getElementById(id).value])
   );
-
-  const hasAny = Object.values(filters).some(Boolean);
+  const search  = document.getElementById('search').value.trim().toLowerCase();
+  const hasAny  = Object.values(filters).some(Boolean) || search;
   document.getElementById('btn-clear').classList.toggle('visible', hasAny);
 
-  const filtered = allCars.filter(car =>
-    Object.entries(filters).every(([field, val]) => !val || car[field] === val)
-  );
+  let filtered = allCars.filter(car => {
+    if (statusMode === 'tem'  && car.status === 'quer') return false;
+    if (statusMode === 'quer' && car.status !== 'quer') return false;
+    if (!Object.entries(filters).every(([f, v]) => !v || car[f] === v)) return false;
+    if (search) {
+      const haystack = [car.modelo, car.marca_comercial, car.marca_carro, car.cor]
+        .join(' ').toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
 
   render(filtered);
 }
@@ -384,17 +423,21 @@ function clearFilters() {
     sel.value = '';
     sel.classList.remove('active');
   });
+  document.getElementById('search').value = '';
   document.getElementById('btn-clear').classList.remove('visible');
-  render(allCars);
+  applyFilters();
 }
 
-// ── Render list ────────────────────────────────
 function render(cars) {
   const list = document.getElementById('car-list');
   const bar  = document.getElementById('results-bar');
 
-  bar.textContent = cars.length < allCars.length
-    ? `${cars.length} de ${allCars.length} carrinhos`
+  const base = statusMode === 'todos' ? allCars :
+               statusMode === 'tem'   ? allCars.filter(c => c.status !== 'quer') :
+                                        allCars.filter(c => c.status === 'quer');
+
+  bar.textContent = cars.length < base.length
+    ? `${cars.length} de ${base.length} carrinhos`
     : '';
 
   if (!cars.length) {
@@ -403,8 +446,9 @@ function render(cars) {
   }
 
   list.innerHTML = cars.map(car => {
-    const idx   = allCars.indexOf(car);
-    const thumb = car.foto_carroceria
+    const idx    = allCars.indexOf(car);
+    const isWish = car.status === 'quer';
+    const thumb  = car.foto_carroceria
       ? `<img class="car-thumb" src="${car.foto_carroceria}" alt="${car.modelo}" loading="lazy">`
       : `<div class="car-thumb-empty">🚗</div>`;
 
@@ -415,7 +459,8 @@ function render(cars) {
     ].filter(Boolean).join('');
 
     return `
-      <div class="car-card" onclick="openModal(${idx})">
+      <div class="car-card${isWish ? ' quer' : ''}" onclick="openModal(${idx})">
+        ${isWish ? '<span class="wish-badge">🎁 Quer ganhar</span>' : ''}
         <div class="car-info">
           <div class="car-name">${car.modelo || '—'}</div>
           <div class="car-tags">${tags}</div>
@@ -425,16 +470,16 @@ function render(cars) {
   }).join('');
 }
 
-// ── Modal ──────────────────────────────────────
 function openModal(idx) {
-  const car = allCars[idx];
+  const car    = allCars[idx];
+  const isWish = car.status === 'quer';
 
   document.getElementById('m-name').textContent = car.modelo || '—';
-
   document.getElementById('m-tags').innerHTML = [
     car.marca_comercial && `<span class="modal-tag comercial">${car.marca_comercial}</span>`,
     car.marca_carro     && `<span class="modal-tag">${car.marca_carro}</span>`,
-    car.cor             && `<span class="modal-tag">${car.cor}</span>`
+    car.cor             && `<span class="modal-tag">${car.cor}</span>`,
+    isWish              && `<span class="modal-tag quer">🎁 Lista de desejos</span>`
   ].filter(Boolean).join('');
 
   const photos = [
@@ -462,74 +507,28 @@ function generateIcon() {
   const c = document.createElement('canvas');
   c.width = c.height = 180;
   const x = c.getContext('2d');
-
-  // Fundo azul arredondado
-  x.beginPath();
-  x.roundRect(0, 0, 180, 180, 38);
-  x.fillStyle = '#1a56db';
-  x.fill();
-
-  // Carroceria
-  x.beginPath();
-  x.roundRect(18, 98, 144, 46, 10);
-  x.fillStyle = '#2563eb';
-  x.fill();
-
-  // Cabine
-  x.beginPath();
-  x.moveTo(48, 98);
-  x.bezierCurveTo(52, 72, 62, 60, 78, 57);
-  x.lineTo(102, 57);
-  x.bezierCurveTo(118, 60, 128, 72, 132, 98);
-  x.closePath();
-  x.fillStyle = '#3b82f6';
-  x.fill();
-
-  // Janela esquerda
-  x.beginPath();
-  x.moveTo(57, 92); x.lineTo(88, 92); x.lineTo(88, 62); x.lineTo(76, 62);
-  x.bezierCurveTo(64, 65, 57, 78, 55, 95);
-  x.closePath();
-  x.fillStyle = '#bfdbfe';
-  x.fill();
-
-  // Janela direita
-  x.beginPath();
-  x.moveTo(123, 92); x.lineTo(92, 92); x.lineTo(92, 62); x.lineTo(104, 62);
-  x.bezierCurveTo(116, 65, 123, 78, 125, 95);
-  x.closePath();
-  x.fillStyle = '#bfdbfe';
-  x.fill();
-
-  // Rodas
-  [[52, 148], [128, 148]].forEach(([cx, cy]) => {
-    x.beginPath(); x.arc(cx, cy, 19, 0, Math.PI*2);
-    x.fillStyle = '#111827'; x.fill();
-    x.beginPath(); x.arc(cx, cy, 11, 0, Math.PI*2);
-    x.fillStyle = '#374151'; x.fill();
-    x.beginPath(); x.arc(cx, cy, 5, 0, Math.PI*2);
-    x.fillStyle = '#9ca3af'; x.fill();
+  x.beginPath(); x.roundRect(0,0,180,180,38); x.fillStyle='#1a56db'; x.fill();
+  x.beginPath(); x.roundRect(18,98,144,46,10); x.fillStyle='#2563eb'; x.fill();
+  x.beginPath(); x.moveTo(48,98); x.bezierCurveTo(52,72,62,60,78,57);
+  x.lineTo(102,57); x.bezierCurveTo(118,60,128,72,132,98);
+  x.closePath(); x.fillStyle='#3b82f6'; x.fill();
+  x.beginPath(); x.moveTo(57,92); x.lineTo(88,92); x.lineTo(88,62); x.lineTo(76,62);
+  x.bezierCurveTo(64,65,57,78,55,95); x.closePath(); x.fillStyle='#bfdbfe'; x.fill();
+  x.beginPath(); x.moveTo(123,92); x.lineTo(92,92); x.lineTo(92,62); x.lineTo(104,62);
+  x.bezierCurveTo(116,65,123,78,125,95); x.closePath(); x.fillStyle='#bfdbfe'; x.fill();
+  [[52,148],[128,148]].forEach(([cx,cy])=>{
+    x.beginPath(); x.arc(cx,cy,19,0,Math.PI*2); x.fillStyle='#111827'; x.fill();
+    x.beginPath(); x.arc(cx,cy,11,0,Math.PI*2); x.fillStyle='#374151'; x.fill();
+    x.beginPath(); x.arc(cx,cy,5,0,Math.PI*2);  x.fillStyle='#9ca3af'; x.fill();
   });
-
-  // Farol
-  x.beginPath(); x.roundRect(19, 106, 18, 9, 4);
-  x.fillStyle = '#fef08a'; x.fill();
-
-  // Lanterna
-  x.beginPath(); x.roundRect(143, 106, 18, 9, 4);
-  x.fillStyle = '#fca5a5'; x.fill();
-
-  // JP na porta
-  x.fillStyle = '#ffffff';
-  x.font = 'bold 28px Arial Black, Arial';
-  x.textAlign = 'center';
-  x.fillText('JP', 54, 130);
-
+  x.beginPath(); x.roundRect(19,106,18,9,4); x.fillStyle='#fef08a'; x.fill();
+  x.beginPath(); x.roundRect(143,106,18,9,4); x.fillStyle='#fca5a5'; x.fill();
+  x.fillStyle='#fff'; x.font='bold 28px Arial Black,Arial';
+  x.textAlign='center'; x.fillText('JP',54,130);
   const url = c.toDataURL('image/png');
   document.getElementById('touch-icon').href = url;
   document.getElementById('fav-icon').href   = url;
 }
 </script>
-
 </body>
 </html>

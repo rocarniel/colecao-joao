@@ -12,376 +12,231 @@
   <meta name="theme-color" content="#1c1c1e">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f2f2f7;
-      color: #1c1c1e;
-      min-height: 100vh;
+      background: #f2f2f7; color: #1c1c1e; min-height: 100vh;
     }
 
     /* ── Login ── */
     .login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
     }
     .login-box {
-      background: white;
-      border-radius: 20px;
-      padding: 36px 24px;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
+      background: white; border-radius: 20px; padding: 36px 24px;
+      width: 100%; max-width: 360px; text-align: center;
       box-shadow: 0 4px 24px rgba(0,0,0,0.1);
     }
     .login-box .icon { font-size: 52px; margin-bottom: 14px; }
     .login-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
     .login-box .subtitle { font-size: 14px; color: #8e8e93; margin-bottom: 28px; }
-    .login-error {
-      color: #e84118;
-      font-size: 13px;
-      margin-top: 10px;
-      display: none;
-    }
+    .login-error { color: #e84118; font-size: 13px; margin-top: 10px; display: none; }
 
     /* ── Header ── */
     header {
-      background: #1c1c1e;
-      color: white;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: #1c1c1e; color: white; padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
     }
     header h1 { font-size: 18px; font-weight: 700; }
-
     .btn-logout {
-      background: rgba(255,255,255,0.12);
-      border: none;
-      color: white;
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      font-family: inherit;
+      background: rgba(255,255,255,0.12); border: none; color: white;
+      padding: 7px 14px; border-radius: 8px; font-size: 13px;
+      cursor: pointer; font-family: inherit;
     }
 
-    /* ── Tab bar ── */
-    .tabs {
-      background: white;
-      display: flex;
-      border-bottom: 1px solid #e5e5ea;
-    }
+    /* ── Tabs ── */
+    .tabs { background: white; display: flex; border-bottom: 1px solid #e5e5ea; }
     .tab {
-      flex: 1;
-      padding: 13px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 500;
-      color: #8e8e93;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.15s;
+      flex: 1; padding: 13px; text-align: center; font-size: 14px;
+      font-weight: 500; color: #8e8e93; cursor: pointer;
+      border-bottom: 3px solid transparent; transition: all 0.15s;
     }
-    .tab.active {
-      color: #e84118;
-      border-bottom-color: #e84118;
-      font-weight: 600;
-    }
+    .tab.active { color: #e84118; border-bottom-color: #e84118; font-weight: 600; }
 
-    /* ── Form ── */
+    /* ── Panels ── */
     .panel { display: none; }
     .panel.active { display: block; }
 
-    .form-wrap {
-      padding: 16px 16px 40px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
+    /* ── Form ── */
+    .form-wrap { padding: 16px 16px 40px; max-width: 480px; margin: 0 auto; }
     .section-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #8e8e93;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin: 22px 0 10px;
+      font-size: 12px; font-weight: 600; color: #8e8e93;
+      text-transform: uppercase; letter-spacing: 0.6px; margin: 22px 0 10px;
     }
-
     .field { margin-bottom: 10px; }
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #3a3a3c;
-      margin-bottom: 5px;
-    }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: #3a3a3c; margin-bottom: 5px; }
     .field input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1.5px solid #e5e5ea;
-      border-radius: 12px;
-      font-size: 16px; /* 16px evita zoom automático no iOS */
-      background: white;
-      color: #1c1c1e;
-      font-family: inherit;
-      transition: border-color 0.2s;
+      width: 100%; padding: 13px 14px; border: 1.5px solid #e5e5ea;
+      border-radius: 12px; font-size: 16px; background: white;
+      color: #1c1c1e; font-family: inherit; transition: border-color 0.2s;
     }
-    .field input:focus {
-      outline: none;
-      border-color: #e84118;
-    }
+    .field input:focus { outline: none; border-color: #e84118; }
 
-    /* ── Photo upload ── */
-    .photo-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
+    /* ── Autocomplete ── */
+    .ac-wrap { position: relative; }
+    .ac-dropdown {
+      display: none; position: absolute; top: calc(100% + 4px);
+      left: 0; right: 0; background: white;
+      border: 1.5px solid #e5e5ea; border-radius: 12px;
+      overflow: hidden; z-index: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
+    .ac-dropdown.open { display: block; }
+    .ac-item {
+      padding: 13px 16px; font-size: 15px; color: #1c1c1e;
+      cursor: pointer; border-bottom: 1px solid #f2f2f7;
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-item:active { background: #fff3ee; }
+    .ac-item mark { background: none; color: #e84118; font-weight: 700; }
 
+    /* ── Status toggle ── */
+    .status-toggle { display: flex; gap: 8px; margin-bottom: 10px; }
+    .status-btn {
+      flex: 1; padding: 12px; border-radius: 12px;
+      border: 1.5px solid #e5e5ea; background: white;
+      font-size: 14px; font-weight: 500; color: #8e8e93;
+      cursor: pointer; font-family: inherit; text-align: center;
+      transition: all 0.15s;
+    }
+    .status-btn.active-tem  { border-color: #34c759; background: #f0fff4; color: #1a7f37; }
+    .status-btn.active-quer { border-color: #f5c400; background: #fffbeb; color: #92660a; }
+
+    /* ── Photo slots ── */
+    .photo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .photo-slot {
-      position: relative;
-      border: 2px dashed #d1d1d6;
-      border-radius: 14px;
-      background: white;
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.2s;
-      overflow: hidden;
+      position: relative; border: 2px dashed #d1d1d6; border-radius: 14px;
+      background: white; aspect-ratio: 1;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; cursor: pointer; overflow: hidden;
     }
     .photo-slot.done { border-style: solid; border-color: #34c759; }
-    .photo-slot input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      font-size: 0;
-    }
-    .photo-slot .slot-icon { font-size: 32px; pointer-events: none; }
-    .photo-slot .slot-label {
-      font-size: 11px;
-      color: #8e8e93;
-      font-weight: 500;
-      margin-top: 6px;
-      text-align: center;
-      padding: 0 6px;
-      pointer-events: none;
-    }
-    .photo-slot .slot-preview {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-      border-radius: 12px;
-    }
+    .photo-slot input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+    .photo-slot .slot-icon  { font-size: 32px; pointer-events: none; }
+    .photo-slot .slot-label { font-size: 11px; color: #8e8e93; font-weight: 500; margin-top: 6px; text-align: center; padding: 0 6px; pointer-events: none; }
+    .photo-slot .slot-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 12px; }
     .photo-slot.done .slot-preview { display: block; }
-    .photo-slot .slot-badge {
-      display: none;
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #34c759;
-      color: white;
-      font-size: 12px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-    }
+    .photo-slot .slot-badge { display: none; position: absolute; top: 6px; right: 6px; background: #34c759; color: white; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; align-items: center; justify-content: center; font-weight: 700; }
     .photo-slot.done .slot-badge { display: flex; }
 
     /* ── Buttons ── */
     .btn-save {
-      width: 100%;
-      background: #e84118;
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 17px;
-      font-size: 17px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 24px;
-      font-family: inherit;
-      transition: opacity 0.2s;
+      width: 100%; background: #e84118; color: white; border: none;
+      border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
+      cursor: pointer; margin-top: 24px; font-family: inherit; transition: opacity 0.2s;
     }
     .btn-save:disabled { opacity: 0.45; cursor: default; }
-    .btn-save:active:not(:disabled) { opacity: 0.85; }
-
+    .btn-cancel {
+      width: 100%; background: none; color: #8e8e93; border: 1.5px solid #e5e5ea;
+      border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 500;
+      cursor: pointer; margin-top: 10px; font-family: inherit;
+    }
     .btn-primary {
-      width: 100%;
-      background: #e84118;
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 17px;
-      font-size: 17px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
+      width: 100%; background: #e84118; color: white; border: none;
+      border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
     }
+    .edit-mode-banner {
+      display: none; background: #fff3ee; border: 1.5px solid #e84118;
+      border-radius: 12px; padding: 10px 14px; margin-bottom: 8px;
+      font-size: 13px; color: #e84118; font-weight: 600; text-align: center;
+    }
+    .edit-mode-banner.visible { display: block; }
 
-    /* ── List panel ── */
-    .car-list-admin {
-      padding: 12px 14px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    /* ── Admin list ── */
+    .car-list-admin { padding: 12px 14px 40px; display: flex; flex-direction: column; gap: 8px; }
     .admin-card {
-      background: white;
-      border-radius: 14px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      background: white; border-radius: 14px; padding: 12px 12px 12px 14px;
+      display: flex; align-items: center; gap: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.07);
     }
     .admin-card-info { flex: 1; min-width: 0; }
     .admin-card-name { font-size: 15px; font-weight: 600; }
     .admin-card-sub  { font-size: 12px; color: #8e8e93; margin-top: 2px; }
-    .admin-thumb {
-      width: 56px; height: 56px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #f2f2f7;
-      flex-shrink: 0;
+    .admin-thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .admin-thumb-empty { width: 52px; height: 52px; border-radius: 8px; background: #f2f2f7; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .admin-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+    .btn-edit, .btn-del {
+      border: none; border-radius: 8px; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer;
     }
-    .admin-thumb-empty {
-      width: 56px; height: 56px;
-      border-radius: 8px;
-      background: #f2f2f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
+    .btn-edit { background: #e8f0fe; }
+    .btn-del  { background: #fde8e8; }
+    .wish-pill {
+      font-size: 10px; background: #fffbeb; color: #92660a;
+      border: 1px solid #f5c40066; border-radius: 20px;
+      padding: 1px 7px; display: inline-block; margin-top: 3px;
     }
-    .list-count {
-      padding: 10px 16px 4px;
-      font-size: 12px;
-      color: #8e8e93;
-    }
+    .list-count { padding: 10px 16px 4px; font-size: 12px; color: #8e8e93; }
 
-    /* ── Loading overlay ── */
+    /* ── Overlay ── */
     .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: white;
-      font-size: 15px;
-      font-weight: 500;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 999; flex-direction: column; align-items: center;
+      justify-content: center; gap: 14px; color: white; font-size: 15px; font-weight: 500;
     }
     .overlay.active { display: flex; }
     .spinner {
-      width: 44px; height: 44px;
-      border: 4px solid rgba(255,255,255,0.25);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
+      width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.25);
+      border-top-color: white; border-radius: 50%; animation: spin 0.75s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── Toast ── */
     .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
+      position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: #1c1c1e;
-      color: white;
-      padding: 13px 22px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 1000;
-      white-space: nowrap;
+      background: #1c1c1e; color: white; padding: 13px 22px;
+      border-radius: 30px; font-size: 14px; font-weight: 500;
+      z-index: 1000; white-space: nowrap;
       transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
       pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    .state-message {
-      text-align: center;
-      padding: 64px 24px;
-      color: #8e8e93;
-    }
+    .state-message { text-align: center; padding: 64px 24px; color: #8e8e93; }
     .state-message .icon { font-size: 48px; margin-bottom: 12px; }
 
-    /* ── Autocomplete ── */
-    .ac-wrap { position: relative; }
-    .ac-dropdown {
-      display: none;
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0; right: 0;
-      background: #2a2a2a;
-      border: 1.5px solid #444;
-      border-radius: 12px;
-      overflow: hidden;
-      z-index: 500;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    /* ── Confirm dialog ── */
+    .confirm-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 998; align-items: center; justify-content: center; padding: 24px;
     }
-    .ac-dropdown.open { display: block; }
-    .ac-item {
-      padding: 13px 16px;
-      font-size: 15px;
-      color: #ddd;
-      cursor: pointer;
-      border-bottom: 1px solid #333;
+    .confirm-overlay.open { display: flex; }
+    .confirm-box {
+      background: white; border-radius: 20px; padding: 28px 24px;
+      width: 100%; max-width: 320px; text-align: center;
     }
-    .ac-item:last-child { border-bottom: none; }
-    .ac-item:active { background: #f5c40022; color: #f5c400; }
-    .ac-item mark {
-      background: none;
-      color: #f5c400;
-      font-weight: 700;
-    }
+    .confirm-box h3 { font-size: 18px; margin-bottom: 8px; }
+    .confirm-box p  { font-size: 14px; color: #8e8e93; margin-bottom: 24px; }
+    .confirm-actions { display: flex; gap: 10px; }
+    .btn-confirm-cancel { flex: 1; padding: 13px; border: 1.5px solid #e5e5ea; border-radius: 12px; background: none; font-size: 15px; cursor: pointer; font-family: inherit; }
+    .btn-confirm-del    { flex: 1; padding: 13px; border: none; border-radius: 12px; background: #e84118; color: white; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
   </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ════════════════════════════════════════════════ -->
+<!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="icon">🔐</div>
     <h2>Área Admin</h2>
-    <p class="subtitle">Acesso restrito para cadastro de carrinhos</p>
+    <p class="subtitle">Acesso restrito</p>
     <div class="field">
       <input type="password" id="pwd-input" placeholder="Senha"
              onkeydown="if(event.key==='Enter') doLogin()">
     </div>
     <button class="btn-primary" onclick="doLogin()">Entrar</button>
-    <p class="login-error" id="login-error">Senha incorreta. Tente novamente.</p>
+    <p class="login-error" id="login-error">Senha incorreta.</p>
   </div>
 </div>
 
-<!-- ══ ADMIN PANEL ═══════════════════════════════════════════ -->
+<!-- ══ ADMIN PANEL ════════════════════════════════════ -->
 <div id="admin-panel" style="display:none">
-
   <header>
-    <h1>⚙️ Admin</h1>
+    <h1>⚙️ JP Garage</h1>
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </header>
 
@@ -390,9 +245,16 @@
     <div class="tab"        onclick="switchTab('list')">📋 Coleção</div>
   </div>
 
-  <!-- ── ABA: Adicionar ── -->
+  <!-- ABA: Adicionar / Editar -->
   <div class="panel active" id="panel-add">
     <div class="form-wrap">
+      <div class="edit-mode-banner" id="edit-banner">✏️ Modo edição — altere os campos e salve</div>
+
+      <div class="section-label">Status</div>
+      <div class="status-toggle">
+        <button class="status-btn active-tem" id="sbtn-tem"  onclick="setStatusForm('tem')">✅ Já tem</button>
+        <button class="status-btn"            id="sbtn-quer" onclick="setStatusForm('quer')">🎁 Lista de desejos</button>
+      </div>
 
       <div class="section-label">Identificação</div>
 
@@ -437,11 +299,10 @@
       </div>
 
       <div class="section-label">Fotos</div>
-
       <div class="photo-row">
         <div class="photo-slot" id="slot-carroceria">
           <span class="slot-icon">📷</span>
-          <span class="slot-label">Foto da Carroceria</span>
+          <span class="slot-label">Carroceria</span>
           <img class="slot-preview" id="prev-carroceria" alt="">
           <span class="slot-badge">✓</span>
           <input type="file" accept="image/*" capture="environment"
@@ -449,7 +310,7 @@
         </div>
         <div class="photo-slot" id="slot-fundo">
           <span class="slot-icon">🔍</span>
-          <span class="slot-label">Foto do Fundo</span>
+          <span class="slot-label">Fundo</span>
           <img class="slot-preview" id="prev-fundo" alt="">
           <span class="slot-badge">✓</span>
           <input type="file" accept="image/*" capture="environment"
@@ -457,47 +318,57 @@
         </div>
       </div>
 
-      <button class="btn-save" id="btn-save" onclick="salvar()">
-        Salvar Carrinho
-      </button>
-
+      <button class="btn-save" id="btn-save" onclick="salvar()">Salvar Carrinho</button>
+      <button class="btn-cancel" id="btn-cancel" style="display:none" onclick="cancelEdit()">Cancelar edição</button>
     </div>
   </div>
 
-  <!-- ── ABA: Coleção ── -->
+  <!-- ABA: Coleção -->
   <div class="panel" id="panel-list">
     <div class="list-count" id="list-count"></div>
     <div class="car-list-admin" id="admin-car-list">
       <div class="state-message"><div class="icon">⏳</div><p>Carregando...</p></div>
     </div>
   </div>
-
 </div>
 
-<!-- Overlay de loading -->
+<!-- Overlay loading -->
 <div class="overlay" id="overlay">
   <div class="spinner"></div>
   <span id="overlay-text">Salvando...</span>
 </div>
 
-<!-- Toast -->
+<!-- Confirm delete -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3>Excluir carrinho?</h3>
+    <p id="confirm-name">Esta ação não pode ser desfeita.</p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-confirm-del"    onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-//  CONFIGURAÇÃO — preencha com seus dados
-// ─────────────────────────────────────────────────────────────
-const ADMIN_PASSWORD       = '159075';
-const CLOUDINARY_CLOUD     = 'djyrz7jf5';
-const CLOUDINARY_PRESET    = 'jm2bpefb';
-const APPS_SCRIPT_URL      = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
-const SHEET_CSV_URL        = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
-// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+const ADMIN_PASSWORD    = '159075';
+const CLOUDINARY_CLOUD  = 'djyrz7jf5';
+const CLOUDINARY_PRESET = 'jm2bpefb';
+const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
+const SHEET_CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
+// ─────────────────────────────────────────────────
 
-let photos  = { carroceria: null, fundo: null };
-let carData = [];
+let carData    = [];
+let photos     = { carroceria: null, fundo: null };
+let photoURLs  = { carroceria: '', fundo: '' };
+let editUID    = null;
+let statusForm = 'tem';
+let deleteUID  = null;
 
-// ══ AUTH ═══════════════════════════════════════════════════
+// ══ AUTH ══════════════════════════════════════
 function doLogin() {
   if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
     sessionStorage.setItem('jp_admin', '1');
@@ -505,80 +376,24 @@ function doLogin() {
   } else {
     document.getElementById('login-error').style.display = 'block';
     document.getElementById('pwd-input').value = '';
-    document.getElementById('pwd-input').focus();
   }
 }
-
-function doLogout() {
-  sessionStorage.removeItem('jp_admin');
-  location.reload();
-}
-
+function doLogout() { sessionStorage.removeItem('jp_admin'); location.reload(); }
 function showPanel() {
-  document.getElementById('login-screen').style.display  = 'none';
-  document.getElementById('admin-panel').style.display   = 'block';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-panel').style.display  = 'block';
   loadData();
 }
-
 if (sessionStorage.getItem('jp_admin')) showPanel();
 
-function generateIcon() {
-  const c = document.createElement('canvas');
-  c.width = c.height = 180;
-  const x = c.getContext('2d');
-
-  x.beginPath(); x.roundRect(0, 0, 180, 180, 38);
-  x.fillStyle = '#1a56db'; x.fill();
-
-  x.beginPath(); x.roundRect(18, 98, 144, 46, 10);
-  x.fillStyle = '#2563eb'; x.fill();
-
-  x.beginPath();
-  x.moveTo(48, 98); x.bezierCurveTo(52, 72, 62, 60, 78, 57);
-  x.lineTo(102, 57); x.bezierCurveTo(118, 60, 128, 72, 132, 98);
-  x.closePath(); x.fillStyle = '#3b82f6'; x.fill();
-
-  x.beginPath();
-  x.moveTo(57, 92); x.lineTo(88, 92); x.lineTo(88, 62); x.lineTo(76, 62);
-  x.bezierCurveTo(64, 65, 57, 78, 55, 95); x.closePath();
-  x.fillStyle = '#bfdbfe'; x.fill();
-
-  x.beginPath();
-  x.moveTo(123, 92); x.lineTo(92, 92); x.lineTo(92, 62); x.lineTo(104, 62);
-  x.bezierCurveTo(116, 65, 123, 78, 125, 95); x.closePath();
-  x.fillStyle = '#bfdbfe'; x.fill();
-
-  [[52, 148], [128, 148]].forEach(([cx, cy]) => {
-    x.beginPath(); x.arc(cx, cy, 19, 0, Math.PI*2); x.fillStyle = '#111827'; x.fill();
-    x.beginPath(); x.arc(cx, cy, 11, 0, Math.PI*2); x.fillStyle = '#374151'; x.fill();
-    x.beginPath(); x.arc(cx, cy, 5,  0, Math.PI*2); x.fillStyle = '#9ca3af'; x.fill();
-  });
-
-  x.beginPath(); x.roundRect(19, 106, 18, 9, 4); x.fillStyle = '#fef08a'; x.fill();
-  x.beginPath(); x.roundRect(143, 106, 18, 9, 4); x.fillStyle = '#fca5a5'; x.fill();
-
-  x.fillStyle = '#ffffff';
-  x.font = 'bold 28px Arial Black, Arial';
-  x.textAlign = 'center';
-  x.fillText('JP', 54, 130);
-
-  const url = c.toDataURL('image/png');
-  document.getElementById('touch-icon').href = url;
-  document.getElementById('fav-icon').href   = url;
-}
-generateIcon();
-
-// ══ DATA ═══════════════════════════════════════════════════
+// ══ DATA ══════════════════════════════════════
 async function loadData() {
   try {
     const res  = await fetch(SHEET_CSV_URL);
     const text = await res.text();
     carData = parseCSV(text);
-    populateAutocomplete();
     renderAdminList();
-  } catch {
-    toast('⚠️ Não foi possível carregar os dados.');
-  }
+  } catch { toast('⚠️ Erro ao carregar dados.'); }
 }
 
 function parseCSV(raw) {
@@ -591,85 +406,17 @@ function parseCSV(raw) {
     return obj;
   }).filter(c => c.modelo || c.marca_comercial);
 }
-
 function splitLine(line) {
   const out = []; let cur = ''; let q = false;
   for (const ch of line) {
-    if (ch === '"')       q = !q;
+    if (ch === '"') q = !q;
     else if (ch === ',' && !q) { out.push(cur); cur = ''; }
     else cur += ch;
   }
   out.push(cur); return out;
 }
 
-function populateAutocomplete() {
-  // dados já carregados em carData — autocomplete usa acFilter em tempo real
-}
-
-function acFilter(inputId, dropId, field) {
-  const input = document.getElementById(inputId);
-  const drop  = document.getElementById(dropId);
-  const query = input.value.trim().toLowerCase();
-
-  if (!query) { drop.classList.remove('open'); return; }
-
-  const all     = [...new Set(carData.map(c => c[field]).filter(Boolean))].sort();
-  const matches = all.filter(v => v.toLowerCase().includes(query));
-
-  if (!matches.length) { drop.classList.remove('open'); return; }
-
-  drop.innerHTML = matches.map(v => {
-    const hi = v.replace(new RegExp(`(${query})`, 'gi'), '<mark>$1</mark>');
-    return `<div class="ac-item" onmousedown="acPick('${inputId}','${dropId}','${v.replace(/'/g,"\\'")}')">
-              ${hi}
-            </div>`;
-  }).join('');
-
-  drop.classList.add('open');
-}
-
-function acPick(inputId, dropId, value) {
-  document.getElementById(inputId).value = value;
-  acClose(dropId);
-}
-
-function acClose(dropId) {
-  setTimeout(() => {
-    const el = document.getElementById(dropId);
-    if (el) el.classList.remove('open');
-  }, 150);
-}
-
-function renderAdminList() {
-  const list = document.getElementById('admin-car-list');
-  document.getElementById('list-count').textContent =
-    `${carData.length} carrinhos cadastrados`;
-
-  if (!carData.length) {
-    list.innerHTML = '<div class="state-message"><div class="icon">📭</div><p>Nenhum carrinho ainda</p></div>';
-    return;
-  }
-
-  list.innerHTML = [...carData].reverse().map(car => {
-    const thumb = car.foto_carroceria
-      ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
-      : `<div class="admin-thumb-empty">🚗</div>`;
-
-    const sub = [car.marca_comercial, car.marca_carro, car.cor]
-      .filter(Boolean).join(' · ');
-
-    return `
-      <div class="admin-card">
-        ${thumb}
-        <div class="admin-card-info">
-          <div class="admin-card-name">${car.modelo || '—'}</div>
-          <div class="admin-card-sub">${sub || '—'}</div>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-// ══ TABS ═══════════════════════════════════════════════════
+// ══ TABS ══════════════════════════════════════
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) =>
     t.classList.toggle('active', (i === 0) === (name === 'add')));
@@ -677,12 +424,44 @@ function switchTab(name) {
   document.getElementById('panel-list').classList.toggle('active', name === 'list');
 }
 
-// ══ PHOTOS ═════════════════════════════════════════════════
+// ══ STATUS FORM ═══════════════════════════════
+function setStatusForm(val) {
+  statusForm = val;
+  document.getElementById('sbtn-tem').className  = 'status-btn' + (val === 'tem'  ? ' active-tem'  : '');
+  document.getElementById('sbtn-quer').className = 'status-btn' + (val === 'quer' ? ' active-quer' : '');
+}
+
+// ══ AUTOCOMPLETE ══════════════════════════════
+function acFilter(inputId, dropId, field) {
+  const input = document.getElementById(inputId);
+  const drop  = document.getElementById(dropId);
+  const query = input.value.trim().toLowerCase();
+  if (!query) { drop.classList.remove('open'); return; }
+  const all     = [...new Set(carData.map(c => c[field]).filter(Boolean))].sort();
+  const matches = all.filter(v => v.toLowerCase().includes(query));
+  if (!matches.length) { drop.classList.remove('open'); return; }
+  drop.innerHTML = matches.map(v => {
+    const hi = v.replace(new RegExp(`(${query})`, 'gi'), '<mark>$1</mark>');
+    return `<div class="ac-item" onmousedown="acPick('${inputId}','${dropId}','${v.replace(/'/g,"\\'")}')">
+              ${hi}
+            </div>`;
+  }).join('');
+  drop.classList.add('open');
+}
+function acPick(inputId, dropId, value) {
+  document.getElementById(inputId).value = value;
+  acClose(dropId);
+}
+function acClose(dropId) {
+  setTimeout(() => { const el = document.getElementById(dropId); if (el) el.classList.remove('open'); }, 150);
+}
+
+// ══ PHOTOS ════════════════════════════════════
 function handlePhoto(input, type) {
   const file = input.files[0];
   if (!file) return;
   photos[type] = file;
-
+  photoURLs[type] = '';
   const reader = new FileReader();
   reader.onload = e => {
     document.getElementById(`prev-${type}`).src = e.target.result;
@@ -691,21 +470,7 @@ function handlePhoto(input, type) {
   reader.readAsDataURL(file);
 }
 
-// ══ UPLOAD & SAVE ══════════════════════════════════════════
-async function uploadImg(file) {
-  const fd = new FormData();
-  fd.append('file',           file);
-  fd.append('upload_preset',  CLOUDINARY_PRESET);
-  fd.append('folder',         'carrinhos-joao');
-
-  const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
-    method: 'POST', body: fd
-  });
-  const data = await res.json();
-  if (!data.secure_url) throw new Error('Cloudinary falhou');
-  return data.secure_url;
-}
-
+// ══ SAVE / UPDATE ═════════════════════════════
 async function salvar() {
   const comercial = document.getElementById('i-comercial').value.trim();
   const marca     = document.getElementById('i-marca').value.trim();
@@ -713,36 +478,41 @@ async function salvar() {
   const cor       = document.getElementById('i-cor').value.trim();
 
   if (!comercial) { toast('⚠️ Informe a Marca Comercial.'); return; }
-  if (!marca)     { toast('⚠️ Informe a Marca do Carro.'); return; }
-  if (!modelo)    { toast('⚠️ Informe o Modelo.'); return; }
-  if (!cor)       { toast('⚠️ Informe a Cor.'); return; }
+  if (!marca)     { toast('⚠️ Informe a Marca do Carro.');  return; }
+  if (!modelo)    { toast('⚠️ Informe o Modelo.');           return; }
+  if (!cor)       { toast('⚠️ Informe a Cor.');              return; }
 
   setLoading(true, 'Enviando fotos...');
 
   try {
-    let urlCar = '', urlFundo = '';
+    let urlCar   = photoURLs.carroceria;
+    let urlFundo = photoURLs.fundo;
 
     if (photos.carroceria) urlCar   = await uploadImg(photos.carroceria);
     if (photos.fundo)      { setLoadingText('Enviando segunda foto...'); urlFundo = await uploadImg(photos.fundo); }
 
     setLoadingText('Salvando no catálogo...');
 
+    const payload = {
+      action:          editUID ? 'update' : 'add',
+      uid:             editUID || String(Date.now()),
+      marca_comercial: comercial,
+      marca_carro:     marca,
+      modelo,
+      cor,
+      foto_carroceria: urlCar,
+      foto_fundo:      urlFundo,
+      status:          statusForm
+    };
+
     await fetch(APPS_SCRIPT_URL, {
-      method:  'POST',
-      mode:    'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({
-        marca_comercial: comercial,
-        marca_carro:     marca,
-        modelo,
-        cor,
-        foto_carroceria: urlCar,
-        foto_fundo:      urlFundo
-      })
+      body: JSON.stringify(payload)
     });
 
     setLoading(false);
-    toast('✅ Carrinho salvo com sucesso!');
+    toast(editUID ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
     resetForm();
     await loadData();
 
@@ -753,31 +523,174 @@ async function salvar() {
   }
 }
 
-function resetForm() {
-  ['i-comercial','i-marca','i-modelo','i-cor'].forEach(id =>
-    document.getElementById(id).value = '');
+// ══ EDIT ══════════════════════════════════════
+function editCar(uid) {
+  const car = carData.find(c => c.uid === uid);
+  if (!car) return;
+
+  editUID = uid;
+  document.getElementById('i-comercial').value = car.marca_comercial || '';
+  document.getElementById('i-marca').value     = car.marca_carro     || '';
+  document.getElementById('i-modelo').value    = car.modelo          || '';
+  document.getElementById('i-cor').value       = car.cor             || '';
+  photoURLs = { carroceria: car.foto_carroceria || '', fundo: car.foto_fundo || '' };
+  photos    = { carroceria: null, fundo: null };
+
   ['carroceria','fundo'].forEach(type => {
-    photos[type] = null;
-    document.getElementById(`prev-${type}`).src = '';
-    document.getElementById(`slot-${type}`).classList.remove('done');
+    const url  = photoURLs[type];
+    const prev = document.getElementById(`prev-${type}`);
+    const slot = document.getElementById(`slot-${type}`);
+    if (url) { prev.src = url; slot.classList.add('done'); }
+    else     { prev.src = ''; slot.classList.remove('done'); }
   });
+
+  setStatusForm(car.status || 'tem');
+  document.getElementById('edit-banner').classList.add('visible');
+  document.getElementById('btn-cancel').style.display = 'block';
+  document.getElementById('btn-save').textContent     = 'Atualizar Carrinho';
+
+  switchTab('add');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ══ UI HELPERS ═════════════════════════════════════════════
+function cancelEdit() {
+  resetForm();
+  toast('Edição cancelada.');
+}
+
+// ══ DELETE ════════════════════════════════════
+function askDelete(uid, nome) {
+  deleteUID = uid;
+  document.getElementById('confirm-name').textContent = `"${nome}" será removido permanentemente.`;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function closeConfirm() {
+  deleteUID = null;
+  document.getElementById('confirm-overlay').classList.remove('open');
+}
+async function confirmDelete() {
+  if (!deleteUID) return;
+  closeConfirm();
+  setLoading(true, 'Excluindo...');
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', uid: deleteUID })
+    });
+    setLoading(false);
+    toast('🗑️ Carrinho excluído.');
+    await loadData();
+  } catch {
+    setLoading(false);
+    toast('❌ Erro ao excluir.');
+  }
+}
+
+// ══ LIST ══════════════════════════════════════
+function renderAdminList() {
+  const list = document.getElementById('admin-car-list');
+  const tem  = carData.filter(c => c.status !== 'quer').length;
+  const quer = carData.filter(c => c.status === 'quer').length;
+  document.getElementById('list-count').textContent =
+    `${carData.length} carrinhos · ${tem} têm · ${quer} na lista de desejos`;
+
+  if (!carData.length) {
+    list.innerHTML = '<div class="state-message"><div class="icon">📭</div><p>Nenhum carrinho ainda</p></div>';
+    return;
+  }
+
+  list.innerHTML = [...carData].reverse().map(car => {
+    const thumb = car.foto_carroceria
+      ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
+      : `<div class="admin-thumb-empty">🚗</div>`;
+    const sub  = [car.marca_comercial, car.marca_carro, car.cor].filter(Boolean).join(' · ');
+    const wish = car.status === 'quer' ? '<span class="wish-pill">🎁 Lista de desejos</span>' : '';
+    const safeNome = (car.modelo || '').replace(/'/g, "\\'");
+
+    return `
+      <div class="admin-card">
+        ${thumb}
+        <div class="admin-card-info">
+          <div class="admin-card-name">${car.modelo || '—'}</div>
+          <div class="admin-card-sub">${sub || '—'}</div>
+          ${wish}
+        </div>
+        <div class="admin-actions">
+          <button class="btn-edit" onclick="editCar('${car.uid}')">✏️</button>
+          <button class="btn-del"  onclick="askDelete('${car.uid}','${safeNome}')">🗑️</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ══ HELPERS ═══════════════════════════════════
+function resetForm() {
+  editUID = null;
+  ['i-comercial','i-marca','i-modelo','i-cor'].forEach(id => document.getElementById(id).value = '');
+  photos    = { carroceria: null, fundo: null };
+  photoURLs = { carroceria: '',   fundo: ''   };
+  ['carroceria','fundo'].forEach(t => {
+    document.getElementById(`prev-${t}`).src = '';
+    document.getElementById(`slot-${t}`).classList.remove('done');
+  });
+  setStatusForm('tem');
+  document.getElementById('edit-banner').classList.remove('visible');
+  document.getElementById('btn-cancel').style.display = 'none';
+  document.getElementById('btn-save').textContent     = 'Salvar Carrinho';
+}
+
+async function uploadImg(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+  fd.append('folder', 'carrinhos-joao');
+  const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd });
+  const data = await res.json();
+  if (!data.secure_url) throw new Error('Upload falhou');
+  return data.secure_url;
+}
+
 function setLoading(on, text = '') {
   document.getElementById('overlay').classList.toggle('active', on);
   document.getElementById('btn-save').disabled = on;
   if (text) document.getElementById('overlay-text').textContent = text;
 }
 function setLoadingText(t) { document.getElementById('overlay-text').textContent = t; }
-
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3200);
 }
-</script>
 
+// ══ ICON ══════════════════════════════════════
+function generateIcon() {
+  const c = document.createElement('canvas'); c.width = c.height = 180;
+  const x = c.getContext('2d');
+  x.beginPath(); x.roundRect(0,0,180,180,38); x.fillStyle='#1a56db'; x.fill();
+  x.beginPath(); x.roundRect(18,98,144,46,10); x.fillStyle='#2563eb'; x.fill();
+  x.beginPath(); x.moveTo(48,98); x.bezierCurveTo(52,72,62,60,78,57);
+  x.lineTo(102,57); x.bezierCurveTo(118,60,128,72,132,98);
+  x.closePath(); x.fillStyle='#3b82f6'; x.fill();
+  x.beginPath(); x.moveTo(57,92); x.lineTo(88,92); x.lineTo(88,62); x.lineTo(76,62);
+  x.bezierCurveTo(64,65,57,78,55,95); x.closePath(); x.fillStyle='#bfdbfe'; x.fill();
+  x.beginPath(); x.moveTo(123,92); x.lineTo(92,92); x.lineTo(92,62); x.lineTo(104,62);
+  x.bezierCurveTo(116,65,123,78,125,95); x.closePath(); x.fillStyle='#bfdbfe'; x.fill();
+  [[52,148],[128,148]].forEach(([cx,cy])=>{
+    x.beginPath(); x.arc(cx,cy,19,0,Math.PI*2); x.fillStyle='#111827'; x.fill();
+    x.beginPath(); x.arc(cx,cy,11,0,Math.PI*2); x.fillStyle='#374151'; x.fill();
+    x.beginPath(); x.arc(cx,cy,5,0,Math.PI*2);  x.fillStyle='#9ca3af'; x.fill();
+  });
+  x.beginPath(); x.roundRect(19,106,18,9,4); x.fillStyle='#fef08a'; x.fill();
+  x.beginPath(); x.roundRect(143,106,18,9,4); x.fillStyle='#fca5a5'; x.fill();
+  x.fillStyle='#fff'; x.font='bold 28px Arial Black,Arial';
+  x.textAlign='center'; x.fillText('JP',54,130);
+  const url = c.toDataURL('image/png');
+  document.getElementById('touch-icon').href = url;
+  document.getElementById('fav-icon').href   = url;
+}
+generateIcon();
+</script>
 </body>
 </html>
