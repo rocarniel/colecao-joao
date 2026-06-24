@@ -253,7 +253,7 @@
       <div class="section-label">Status</div>
       <div class="status-toggle">
         <button class="status-btn active-tem" id="sbtn-tem"  onclick="setStatusForm('tem')">✅ Já tem</button>
-        <button class="status-btn"            id="sbtn-quer" onclick="setStatusForm('quer')">🎁 Lista de desejos</button>
+        <button class="status-btn"            id="sbtn-quer" onclick="setStatusForm('quer')">🔍 Estamos procurando</button>
       </div>
 
       <div class="section-label">Identificação</div>
@@ -593,7 +593,7 @@ function renderAdminList() {
   const tem  = carData.filter(c => c.status !== 'quer').length;
   const quer = carData.filter(c => c.status === 'quer').length;
   document.getElementById('list-count').textContent =
-    `${carData.length} carrinhos · ${tem} têm · ${quer} na lista de desejos`;
+    `${carData.length} carrinhos · ${tem} têm · ${quer} estamos procurando`;
 
   if (!carData.length) {
     list.innerHTML = '<div class="state-message"><div class="icon">📭</div><p>Nenhum carrinho ainda</p></div>';
@@ -605,7 +605,7 @@ function renderAdminList() {
       ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
       : `<div class="admin-thumb-empty">🚗</div>`;
     const sub  = [car.marca_comercial, car.marca_carro, car.cor].filter(Boolean).join(' · ');
-    const wish = car.status === 'quer' ? '<span class="wish-pill">🎁 Lista de desejos</span>' : '';
+    const wish = car.status === 'quer' ? '<span class="wish-pill">🔍 Estamos procurando</span>' : '';
     const safeNome = (car.modelo || '').replace(/'/g, "\\'");
 
     return `

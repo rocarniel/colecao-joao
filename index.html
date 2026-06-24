@@ -285,7 +285,7 @@
 <div class="status-tabs">
   <button class="status-tab active" id="tab-todos" onclick="setStatus('todos')">Todos</button>
   <button class="status-tab"        id="tab-tem"   onclick="setStatus('tem')">✅ Já tem</button>
-  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🎁 Quer ganhar</button>
+  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🔍 Estamos procurando</button>
 </div>
 
 <div class="filters">
@@ -335,7 +335,7 @@ async function init() {
     const tem   = allCars.filter(c => c.status !== 'quer').length;
     const quer  = allCars.filter(c => c.status === 'quer').length;
     document.getElementById('total-label').textContent =
-      `${tem} carrinhos · ${quer > 0 ? quer + ' na lista de desejos' : ''}`.trim().replace(/· $/, '');
+      `${tem} carrinhos · ${quer > 0 ? quer + ' estamos procurando' : ''}`.trim().replace(/· $/, '');
   } catch {
     document.getElementById('car-list').innerHTML =
       '<div class="state-message"><div class="icon">⚠️</div><p>Erro ao carregar. Tente novamente.</p></div>';
@@ -460,7 +460,7 @@ function render(cars) {
 
     return `
       <div class="car-card${isWish ? ' quer' : ''}" onclick="openModal(${idx})">
-        ${isWish ? '<span class="wish-badge">🎁 Quer ganhar</span>' : ''}
+        ${isWish ? '<span class="wish-badge">🔍 Estamos procurando</span>' : ''}
         <div class="car-info">
           <div class="car-name">${car.modelo || '—'}</div>
           <div class="car-tags">${tags}</div>
@@ -479,7 +479,7 @@ function openModal(idx) {
     car.marca_comercial && `<span class="modal-tag comercial">${car.marca_comercial}</span>`,
     car.marca_carro     && `<span class="modal-tag">${car.marca_carro}</span>`,
     car.cor             && `<span class="modal-tag">${car.cor}</span>`,
-    isWish              && `<span class="modal-tag quer">🎁 Lista de desejos</span>`
+    isWish              && `<span class="modal-tag quer">🎁 Estamos procurando</span>`
   ].filter(Boolean).join('');
 
   const photos = [
