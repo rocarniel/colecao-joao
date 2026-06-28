@@ -379,7 +379,7 @@
 <script>
 // ─────────────────────────────────────────────────
 const ADMIN_PASSWORD    = '159075';
-const ANTHROPIC_API_KEY = 'SUA_CHAVE_AQUI';
+const ANTHROPIC_API_KEY = localStorage.getItem('jp_anthropic_key') || '';
 const CLOUDINARY_CLOUD  = 'djyrz7jf5';
 const CLOUDINARY_PRESET = 'jm2bpefb';
 const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
@@ -399,6 +399,13 @@ async function identificarPorIA(input) {
   input.value = '';
   if (!file) return;
 
+  let apiKey = localStorage.getItem('jp_anthropic_key') || '';
+  if (!apiKey) {
+    apiKey = prompt('Cole sua API key da Anthropic:');
+    if (!apiKey) return;
+    localStorage.setItem('jp_anthropic_key', apiKey.trim());
+  }
+
   const btnIA = document.querySelector('.btn-ia');
   btnIA.disabled = true;
   btnIA.textContent = '⏳ Analisando...';
@@ -414,7 +421,7 @@ async function identificarPorIA(input) {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true',
         'content-type': 'application/json'
