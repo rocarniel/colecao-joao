@@ -35,7 +35,6 @@ function doPost(e) {
           set('modelo',          data.modelo);
           set('cor',             data.cor);
           set('foto_carroceria', data.foto_carroceria);
-          set('foto_fundo',      data.foto_fundo);
           set('status',          data.status || 'tem');
           break;
         }
@@ -50,7 +49,6 @@ function doPost(e) {
         modelo:          data.modelo          || '',
         cor:             data.cor             || '',
         foto_carroceria: data.foto_carroceria || '',
-        foto_fundo:      data.foto_fundo      || '',
         uid:             uid,
         status:          data.status          || 'tem'
       };
