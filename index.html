@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="JP Garage">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#1a1a1a">
+  <link rel="manifest" href="manifest.json">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -29,7 +30,10 @@
       border-bottom: 2px solid #f5c400;
     }
     header h1 { font-size: 21px; font-weight: 700; color: #f5c400; letter-spacing: -0.3px; }
-    header p  { font-size: 13px; color: #888; margin-top: 2px; }
+    .header-counts { display: flex; gap: 14px; margin-top: 6px; }
+    .header-count  { display: flex; flex-direction: column; }
+    .header-count .num { font-size: 22px; font-weight: 800; color: #fff; line-height: 1; }
+    .header-count .lbl { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
 
     /* ── Search ── */
     .search-bar {
@@ -184,6 +188,17 @@
     }
     .tag.comercial { background: #e8411822; color: #e84118; font-weight: 600; }
 
+    /* Bolinha de cor */
+    .color-dot {
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      vertical-align: middle;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
     /* Wishlist badge */
     .wish-badge {
       position: absolute;
@@ -269,6 +284,13 @@
       object-fit: cover;
       cursor: zoom-in;
       max-height: 320px;
+      display: block;
+    }
+    .photo-hint {
+      text-align: center;
+      font-size: 11px;
+      color: #444;
+      margin-top: 6px;
     }
     .no-photos { text-align: center; padding: 24px; color: #555; font-size: 14px; }
 
@@ -310,7 +332,16 @@
 
 <header>
   <h1>🚗 JP Garage</h1>
-  <p id="total-label">Carregando...</p>
+  <div class="header-counts" id="header-counts" style="display:none">
+    <div class="header-count">
+      <span class="num" id="count-tem">0</span>
+      <span class="lbl">Já tem</span>
+    </div>
+    <div class="header-count">
+      <span class="num" id="count-quer" style="color:#f5c400">0</span>
+      <span class="lbl">Procurando</span>
+    </div>
+  </div>
 </header>
 
 <div class="search-bar">
@@ -322,7 +353,7 @@
 <div class="status-tabs">
   <button class="status-tab active" id="tab-todos" onclick="setStatus('todos')">Todos</button>
   <button class="status-tab"        id="tab-tem"   onclick="setStatus('tem')">✅ Já tem</button>
-  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🔍 Estamos procurando</button>
+  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🔍 Procurando</button>
 </div>
 
 <div class="filters">
@@ -363,6 +394,34 @@
 <script>
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
 
+const COR_MAP = {
+  'preto':        '#1a1a1a',
+  'branco':       '#f0f0f0',
+  'prata':        '#b8b8b8',
+  'cinza':        '#808080',
+  'vermelho':     '#d42020',
+  'azul':         '#1a60d0',
+  'azul claro':   '#4090e0',
+  'azul escuro':  '#0a2060',
+  'verde':        '#20903a',
+  'verde limão':  '#88c010',
+  'amarelo':      '#f5c400',
+  'laranja':      '#e06010',
+  'roxo':         '#7020b0',
+  'rosa':         '#d84090',
+  'dourado':      '#c89000',
+  'bronze':       '#a05020',
+  'marrom':       '#6a3010',
+  'bege':         '#d0b890',
+  'cobre':        '#b05010',
+};
+
+function corDot(cor) {
+  if (!cor) return '';
+  const hex = COR_MAP[cor.toLowerCase()] || '#555';
+  return `<span class="color-dot" style="background:${hex}"></span>`;
+}
+
 let allCars    = [];
 let statusMode = 'todos';
 
@@ -373,11 +432,11 @@ async function init() {
     allCars = parseCSV(text);
     buildFilters();
     applyFilters();
-    const total = allCars.length;
-    const tem   = allCars.filter(c => c.status !== 'quer').length;
-    const quer  = allCars.filter(c => c.status === 'quer').length;
-    document.getElementById('total-label').textContent =
-      `${tem} carrinhos · ${quer > 0 ? quer + ' estamos procurando' : ''}`.trim().replace(/· $/, '');
+    const tem  = allCars.filter(c => c.status !== 'quer').length;
+    const quer = allCars.filter(c => c.status === 'quer').length;
+    document.getElementById('count-tem').textContent  = tem;
+    document.getElementById('count-quer').textContent = quer;
+    document.getElementById('header-counts').style.display = 'flex';
   } catch {
     document.getElementById('car-list').innerHTML =
       '<div class="state-message"><div class="icon">⚠️</div><p>Erro ao carregar. Tente novamente.</p></div>';
@@ -457,6 +516,7 @@ function applyFilters(changed) {
   });
 
   render(filtered);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function clearFilters() {
@@ -497,7 +557,7 @@ function render(cars) {
     const tags = [
       car.marca_comercial && `<span class="tag comercial">${car.marca_comercial}</span>`,
       car.marca_carro     && `<span class="tag">${car.marca_carro}</span>`,
-      car.cor             && `<span class="tag">${car.cor}</span>`
+      car.cor             && `<span class="tag">${corDot(car.cor)}${car.cor}</span>`
     ].filter(Boolean).join('');
 
     return `
@@ -525,7 +585,8 @@ function openModal(idx) {
   ].filter(Boolean).join('');
 
   document.getElementById('m-photos').innerHTML = car.foto_carroceria
-    ? `<img class="modal-photo" src="${car.foto_carroceria}" alt="${car.modelo}" onclick="openFullscreen('${car.foto_carroceria}')">`
+    ? `<img class="modal-photo" src="${car.foto_carroceria}" alt="${car.modelo}" onclick="openFullscreen('${car.foto_carroceria}')">
+       <p class="photo-hint">Toque na foto para ampliar</p>`
     : '<div class="no-photos">Sem foto cadastrada</div>';
 
   document.getElementById('modal').classList.add('open');
