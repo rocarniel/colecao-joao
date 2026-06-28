@@ -628,12 +628,15 @@ const FILTER_LABELS = {
 };
 
 function buildFilters() {
-  Object.entries(FILTER_MAP).forEach(([id, field]) => {
+  // Marca Comercial e Marca do Carro — lista completa
+  ['f-comercial', 'f-marca'].forEach(id => {
+    const field  = FILTER_MAP[id];
     const sel    = document.getElementById(id);
     const values = [...new Set(allCars.map(c => c[field]).filter(Boolean))].sort();
     sel.innerHTML = `<option value="">${FILTER_LABELS[id]}</option>` +
       values.map(v => `<option value="${v}">${v}</option>`).join('');
   });
+  rebuildModelos();
 
   const cores = [...new Set(allCars.map(c => c.cor).filter(Boolean))].sort();
   const drop  = document.getElementById('f-cor-dropdown');
@@ -645,6 +648,20 @@ function buildFilters() {
         <span class="color-dot" style="background:${hex};width:12px;height:12px"></span>${cor}
       </div>`;
     }).join('');
+}
+
+function rebuildModelos() {
+  const marcaSel = document.getElementById('f-marca').value;
+  const source   = marcaSel ? allCars.filter(c => c.marca_carro === marcaSel) : allCars;
+  const valores  = [...new Set(source.map(c => c.modelo).filter(Boolean))].sort();
+  const sel      = document.getElementById('f-modelo');
+  const atual    = sel.value;
+  sel.innerHTML  = `<option value="">Modelo</option>` +
+    valores.map(v => `<option value="${v}"${v === atual ? ' selected' : ''}>${v}</option>`).join('');
+  if (atual && !valores.includes(atual)) {
+    sel.value = '';
+    sel.classList.remove('active');
+  }
 }
 
 function updateTabCounts() {
@@ -720,7 +737,10 @@ function toggleSort() {
 
 // ── APPLY FILTERS ───────────────────────────────
 function applyFilters(changed) {
-  if (changed) changed.classList.toggle('active', changed.value !== '');
+  if (changed) {
+    changed.classList.toggle('active', changed.value !== '');
+    if (changed.id === 'f-marca') rebuildModelos();
+  }
 
   const filters = Object.fromEntries(
     Object.entries(FILTER_MAP).map(([id, field]) => [field, document.getElementById(id).value])

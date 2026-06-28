@@ -440,11 +440,19 @@ function acFilter(inputId, dropId, field) {
   const drop  = document.getElementById(dropId);
   const query = input.value.trim().toLowerCase();
   if (!query) { drop.classList.remove('open'); return; }
-  const all     = [...new Set(carData.map(c => c[field]).filter(Boolean))].sort();
-  const matches = all.filter(v => v.toLowerCase().includes(query));
+
+  // Se for modelo, filtra apenas pelos carros da marca já selecionada
+  let source = carData;
+  if (field === 'modelo') {
+    const marcaSel = document.getElementById('i-marca').value.trim().toLowerCase();
+    if (marcaSel) source = carData.filter(c => c.marca_carro.toLowerCase() === marcaSel);
+  }
+
+  const all     = [...new Set(source.map(c => c[field]).filter(Boolean))].sort();
+  const matches = all.filter(v => v.toLowerCase().startsWith(query));
   if (!matches.length) { drop.classList.remove('open'); return; }
   drop.innerHTML = matches.map(v => {
-    const hi = v.replace(new RegExp(`(${query})`, 'gi'), '<mark>$1</mark>');
+    const hi = v.replace(new RegExp(`^(${query})`, 'gi'), '<mark>$1</mark>');
     return `<div class="ac-item" onmousedown="acPick('${inputId}','${dropId}','${v.replace(/'/g,"\\'")}')">
               ${hi}
             </div>`;
