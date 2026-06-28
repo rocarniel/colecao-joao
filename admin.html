@@ -532,11 +532,21 @@ async function salvar() {
 }
 
 // ══ EDIT ══════════════════════════════════════
-function editCar(uid) {
-  const car = carData.find(c => c.uid === uid);
+function editCarByIdx(idx) {
+  const car = carData[idx];
   if (!car) return;
+  editCarCore(car);
+}
 
-  editUID = uid;
+function editCar(uid) {
+  const car = carData.find(c => String(c.uid) === String(uid));
+  if (!car) return;
+  editCarCore(car);
+}
+
+function editCarCore(car) {
+
+  editUID = car.uid;
   document.getElementById('i-comercial').value = car.marca_comercial || '';
   document.getElementById('i-marca').value     = car.marca_carro     || '';
   document.getElementById('i-modelo').value    = car.modelo          || '';
@@ -619,6 +629,7 @@ function renderAdminList() {
   }
 
   list.innerHTML = filtered.map(car => {
+    const realIdx = carData.indexOf(car);
     const thumb = car.foto_carroceria
       ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
       : `<div class="admin-thumb-empty">🚗</div>`;
@@ -635,7 +646,7 @@ function renderAdminList() {
           ${wish}
         </div>
         <div class="admin-actions">
-          <button class="btn-edit" onclick="editCar('${car.uid}')">✏️</button>
+          <button class="btn-edit" onclick="editCarByIdx(${realIdx})">✏️</button>
           <button class="btn-del"  onclick="askDelete('${car.uid}','${safeNome}')">🗑️</button>
         </div>
       </div>`;
