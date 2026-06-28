@@ -638,7 +638,7 @@ function buildFilters() {
   });
   rebuildModelos();
 
-  const cores = [...new Set(allCars.map(c => c.cor).filter(Boolean))].sort();
+  const cores = [...new Set(allCars.map(c => c.cor).filter(Boolean))].filter(c => c[0] === c[0].toUpperCase()).sort();
   const drop  = document.getElementById('f-cor-dropdown');
   drop.innerHTML =
     `<div class="cor-option" onclick="pickCor('')"><span class="color-dot" style="background:#333;border-color:#555;width:12px;height:12px"></span>Todas as cores</div>` +
