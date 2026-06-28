@@ -121,6 +121,12 @@
     .photo-slot.done .slot-badge { display: flex; }
 
     /* ── Buttons ── */
+    .btn-ia {
+      width: 100%; background: #5856d6; color: white; border: none;
+      border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 600;
+      cursor: pointer; margin-bottom: 16px; font-family: inherit; transition: opacity 0.2s;
+    }
+    .btn-ia:disabled { opacity: 0.45; cursor: default; }
     .btn-save {
       width: 100%; background: #e84118; color: white; border: none;
       border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
@@ -266,6 +272,8 @@
       </div>
 
       <div class="section-label">Identificação</div>
+      <button class="btn-ia" onclick="document.getElementById('ia-camera-input').click()">🤖 Identificar pela IA</button>
+      <input type="file" id="ia-camera-input" accept="image/*" capture="environment" style="display:none" onchange="identificarPorIA(this)">
 
       <div class="field">
         <label>Marca Comercial <span style="color:#e84118">*</span></label>
@@ -353,11 +361,25 @@
   </div>
 </div>
 
+<!-- Modal confirmação IA -->
+<div class="confirm-overlay" id="ia-confirm-overlay" style="display:none">
+  <div class="confirm-box" style="max-width:340px">
+    <h3 style="margin-bottom:12px">🤖 IA identificou:</h3>
+    <div id="ia-result-preview" style="font-size:14px;line-height:1.8;margin-bottom:8px;text-align:left"></div>
+    <div id="ia-confianca" style="font-size:12px;color:#8e8e93;margin-bottom:16px;text-align:left"></div>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="iaFecharModal()">Cancelar</button>
+      <button class="btn-confirm-del" style="background:#5856d6" onclick="iaConfirmar()">Preencher</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 // ─────────────────────────────────────────────────
 const ADMIN_PASSWORD    = '159075';
+const ANTHROPIC_API_KEY = 'SUA_CHAVE_AQUI';
 const CLOUDINARY_CLOUD  = 'djyrz7jf5';
 const CLOUDINARY_PRESET = 'jm2bpefb';
 const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
@@ -370,6 +392,84 @@ let photoURLs  = { carroceria: '' };
 let editUID    = null;
 let statusForm = 'tem';
 let deleteUID  = null;
+let iaPendente = null;
+
+async function identificarPorIA(input) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+
+  const btnIA = document.querySelector('.btn-ia');
+  btnIA.disabled = true;
+  btnIA.textContent = '⏳ Analisando...';
+
+  try {
+    const b64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+            { type: 'text', text: `Esta é a base/etiqueta de um carrinho miniatura (Hot Wheels, Matchbox, etc). Identifique e responda SOMENTE com JSON válido, sem markdown:
+{"marca_comercial":"Hot Wheels ou Matchbox ou outra","marca_carro":"fabricante real do carro ex Ford, Ferrari","modelo":"nome exato do modelo","cor":"cor predominante em português","confianca":"alta/média/baixa"}` }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) throw new Error('API erro ' + resp.status);
+    const data = await resp.json();
+    const text = data.content[0].text.trim();
+    const json = JSON.parse(text.replace(/```json|```/g, '').trim());
+
+    iaPendente = json;
+    document.getElementById('ia-result-preview').innerHTML =
+      `<b>Marca Comercial:</b> ${json.marca_comercial}<br>` +
+      `<b>Marca do Carro:</b> ${json.marca_carro}<br>` +
+      `<b>Modelo:</b> ${json.modelo}<br>` +
+      `<b>Cor:</b> ${json.cor}`;
+    document.getElementById('ia-confianca').textContent = `Confiança: ${json.confianca}`;
+    document.getElementById('ia-confirm-overlay').style.display = 'flex';
+
+  } catch (err) {
+    toast('❌ IA falhou: ' + err.message);
+  } finally {
+    btnIA.disabled = false;
+    btnIA.textContent = '🤖 Identificar pela IA';
+  }
+}
+
+function iaConfirmar() {
+  if (!iaPendente) return;
+  document.getElementById('i-comercial').value = iaPendente.marca_comercial || '';
+  document.getElementById('i-marca').value     = iaPendente.marca_carro     || '';
+  document.getElementById('i-modelo').value    = iaPendente.modelo          || '';
+  document.getElementById('i-cor').value       = iaPendente.cor             || '';
+  iaPendente = null;
+  document.getElementById('ia-confirm-overlay').style.display = 'none';
+  toast('✅ Campos preenchidos pela IA');
+}
+
+function iaFecharModal() {
+  iaPendente = null;
+  document.getElementById('ia-confirm-overlay').style.display = 'none';
+}
 
 // ══ AUTH ══════════════════════════════════════
 function doLogin() {
