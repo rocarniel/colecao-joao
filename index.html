@@ -23,24 +23,41 @@
     /* ── Header ── */
     header {
       background: #1a1a1a;
-      padding: 16px 20px 14px;
+      padding: 14px 16px 12px;
       position: sticky;
       top: 0;
       z-index: 100;
       border-bottom: 2px solid #f5c400;
     }
-    header h1 { font-size: 21px; font-weight: 700; color: #f5c400; letter-spacing: -0.3px; }
-    .header-counts { display: flex; gap: 14px; margin-top: 6px; }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 20px; font-weight: 700; color: #f5c400; letter-spacing: -0.3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-icon {
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 9px;
+      color: #888;
+      font-size: 16px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .btn-icon:active { background: #333; }
+    .header-counts { display: flex; gap: 14px; margin-top: 8px; }
     .header-count  { display: flex; flex-direction: column; }
-    .header-count .num { font-size: 22px; font-weight: 800; color: #fff; line-height: 1; }
-    .header-count .lbl { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
+    .header-count .num { font-size: 20px; font-weight: 800; color: #fff; line-height: 1; }
+    .header-count .lbl { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
 
     /* ── Search ── */
     .search-bar {
       background: #1a1a1a;
-      padding: 10px 14px;
+      padding: 8px 14px;
       position: sticky;
-      top: 62px;
+      top: 82px;
       z-index: 99;
       border-bottom: 1px solid #222;
     }
@@ -67,38 +84,65 @@
       display: flex;
       gap: 8px;
       position: sticky;
-      top: 115px;
+      top: 130px;
       z-index: 98;
       border-bottom: 1px solid #222;
     }
     .status-tab {
       flex: 1;
-      padding: 7px 8px;
+      padding: 7px 4px;
       border-radius: 8px;
       border: 1px solid #333;
       background: #2a2a2a;
       color: #888;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       text-align: center;
       cursor: pointer;
       font-family: inherit;
       transition: all 0.15s;
+      white-space: nowrap;
     }
+    .status-tab .tab-count { font-size: 11px; opacity: 0.7; margin-left: 2px; }
     .status-tab.active        { background: #f5c40015; color: #f5c400; border-color: #f5c40066; }
     .status-tab.active.quer   { background: #e8411820; color: #e84118; border-color: #e8411866; }
 
+    /* WhatsApp share button */
+    .btn-whatsapp {
+      display: none;
+      width: 100%;
+      background: #25d366;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 8px 14px 0;
+      width: calc(100% - 28px);
+      text-align: center;
+    }
+    .btn-whatsapp.visible { display: block; }
+
     /* ── Filters ── */
-    .filters {
+    .filters-wrap {
+      position: sticky;
+      top: 178px;
+      z-index: 97;
       background: #1a1a1a;
+      border-bottom: 1px solid #222;
+      overflow: hidden;
+      max-height: 200px;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+    }
+    .filters-wrap.collapsed { max-height: 0; border-bottom-color: transparent; }
+    .filters {
       padding: 10px 14px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      border-bottom: 1px solid #222;
-      position: sticky;
-      top: 163px;
-      z-index: 97;
     }
     .filter-select {
       appearance: none;
@@ -161,8 +205,8 @@
       border: 1px solid #333;
       border-radius: 12px;
       overflow: hidden;
-      z-index: 200;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      z-index: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
       max-height: 260px;
       overflow-y: auto;
     }
@@ -181,17 +225,33 @@
     .cor-option:active, .cor-option.selected { background: #2a2200; color: #f5c400; }
     .cor-option .color-dot { width: 12px; height: 12px; flex-shrink: 0; }
 
-    /* ── Results bar ── */
-    .results-bar {
-      padding: 8px 16px;
-      font-size: 12px;
-      color: #666;
-      min-height: 30px;
+    /* ── Sort + results bar ── */
+    .list-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 14px;
+      min-height: 34px;
     }
+    .results-text { font-size: 12px; color: #555; }
+    .sort-btn {
+      background: none;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      color: #666;
+      font-size: 12px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sort-btn.active { border-color: #f5c40055; color: #f5c400; }
 
     /* ── Car list ── */
     .car-list {
-      padding: 0 14px 24px;
+      padding: 0 14px 100px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -235,6 +295,8 @@
       background: #2a2a2a;
       color: #888;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
     }
     .tag.comercial { background: #e8411822; color: #e84118; font-weight: 600; }
 
@@ -263,39 +325,30 @@
     }
 
     .car-thumb {
-      width: 72px;
-      height: 72px;
+      width: 72px; height: 72px;
       border-radius: 10px;
       object-fit: cover;
       flex-shrink: 0;
       background: #2a2a2a;
     }
     .car-thumb-empty {
-      width: 72px;
-      height: 72px;
+      width: 72px; height: 72px;
       border-radius: 10px;
       background: #2a2a2a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 30px;
       flex-shrink: 0;
     }
 
     /* ── States ── */
-    .state-message {
-      text-align: center;
-      padding: 64px 24px;
-      color: #555;
-    }
+    .state-message { text-align: center; padding: 64px 24px; color: #555; }
     .state-message .icon { font-size: 52px; margin-bottom: 12px; }
     .state-message p { font-size: 15px; }
 
     /* ── Modal ── */
     .modal-overlay {
       display: none;
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.8);
       z-index: 200;
       align-items: flex-end;
@@ -305,13 +358,13 @@
     .modal {
       background: #1e1e1e;
       border-radius: 20px 20px 0 0;
-      padding: 20px 20px 36px;
-      width: 100%;
-      max-width: 480px;
+      padding: 20px 20px 40px;
+      width: 100%; max-width: 480px;
       max-height: 88vh;
       overflow-y: auto;
       animation: slideUp 0.25s ease;
       border-top: 2px solid #f5c400;
+      touch-action: pan-y;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -319,69 +372,80 @@
     }
     .modal-handle {
       width: 40px; height: 4px;
-      background: #333;
-      border-radius: 4px;
+      background: #333; border-radius: 4px;
       margin: 0 auto 18px;
     }
     .modal-name { font-size: 20px; font-weight: 700; color: #f5c400; margin-bottom: 10px; }
-    .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
     .modal-tag  { font-size: 13px; padding: 4px 12px; border-radius: 20px; background: #2a2a2a; color: #aaa; }
     .modal-tag.comercial { background: #e8411822; color: #e84118; }
     .modal-tag.quer      { background: #f5c40022; color: #f5c400; font-weight: 600; }
+    .modal-date { font-size: 11px; color: #444; margin-bottom: 14px; }
     .modal-photo {
-      width: 100%;
-      border-radius: 14px;
-      object-fit: cover;
-      cursor: zoom-in;
-      max-height: 320px;
-      display: block;
+      width: 100%; border-radius: 14px;
+      object-fit: cover; cursor: zoom-in;
+      max-height: 320px; display: block;
     }
-    .photo-hint {
-      text-align: center;
-      font-size: 11px;
-      color: #444;
-      margin-top: 6px;
-    }
+    .photo-hint { text-align: center; font-size: 11px; color: #444; margin-top: 6px; }
     .no-photos { text-align: center; padding: 24px; color: #555; font-size: 14px; }
 
     /* Foto em tela cheia */
     .fullscreen-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
+      display: none; position: fixed; inset: 0;
+      background: #000; z-index: 300;
+      align-items: center; justify-content: center;
     }
     .fullscreen-overlay.open { display: flex; }
-    .fullscreen-overlay img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .fullscreen-overlay img { width: 100%; height: 100%; object-fit: contain; }
     .fullscreen-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: white;
-      font-size: 28px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; font-size: 28px;
+      width: 44px; height: 44px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
+
+    /* ── Stats overlay ── */
+    .stats-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85); z-index: 250;
+      align-items: flex-end; justify-content: center;
+    }
+    .stats-overlay.open { display: flex; }
+    .stats-panel {
+      background: #1e1e1e; border-radius: 20px 20px 0 0;
+      padding: 20px 20px 40px; width: 100%; max-width: 480px;
+      max-height: 80vh; overflow-y: auto;
+      animation: slideUp 0.25s ease;
+      border-top: 2px solid #f5c400;
+    }
+    .stats-title { font-size: 17px; font-weight: 700; color: #f5c400; margin-bottom: 18px; text-align: center; }
+    .stats-section { margin-bottom: 20px; }
+    .stats-section-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+    .stats-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #2a2a2a;
+      font-size: 14px;
+    }
+    .stats-row:last-child { border-bottom: none; }
+    .stats-row .name { color: #ccc; display: flex; align-items: center; gap: 8px; }
+    .stats-row .val  { color: #fff; font-weight: 700; }
+    .stats-bar-wrap  { flex: 1; margin: 0 12px; height: 4px; background: #2a2a2a; border-radius: 4px; overflow: hidden; }
+    .stats-bar       { height: 100%; background: #f5c400; border-radius: 4px; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🚗 JP Garage</h1>
+  <div class="header-top">
+    <h1>🚗 JP Garage</h1>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="openStats()" title="Estatísticas">📊</button>
+      <button class="btn-icon" id="btn-refresh" onclick="refreshData()" title="Atualizar">↺</button>
+    </div>
+  </div>
   <div class="header-counts" id="header-counts" style="display:none">
     <div class="header-count">
       <span class="num" id="count-tem">0</span>
@@ -396,53 +460,72 @@
 
 <div class="search-bar">
   <input class="search-input" type="search" id="search"
-         placeholder="Buscar por nome, marca ou modelo..."
+         placeholder="Buscar carrinho..."
          oninput="applyFilters()" autocomplete="off">
 </div>
 
 <div class="status-tabs">
-  <button class="status-tab active" id="tab-todos" onclick="setStatus('todos')">Todos</button>
-  <button class="status-tab"        id="tab-tem"   onclick="setStatus('tem')">✅ Já tem</button>
-  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🔍 Procurando</button>
+  <button class="status-tab active" id="tab-todos" onclick="setStatus('todos')">Todos<span class="tab-count" id="cnt-todos"></span></button>
+  <button class="status-tab"        id="tab-tem"   onclick="setStatus('tem')">✅ Já tem<span class="tab-count" id="cnt-tem"></span></button>
+  <button class="status-tab quer"   id="tab-quer"  onclick="setStatus('quer')">🔍 Procurando<span class="tab-count" id="cnt-quer"></span></button>
 </div>
+<button class="btn-whatsapp" id="btn-whatsapp" onclick="shareWhatsApp()">📲 Compartilhar lista no WhatsApp</button>
 
-<div class="filters">
-  <select class="filter-select" id="f-comercial" onchange="applyFilters(this)">
-    <option value="">Marca Comercial</option>
-  </select>
-  <select class="filter-select" id="f-marca" onchange="applyFilters(this)">
-    <option value="">Marca do Carro</option>
-  </select>
-  <select class="filter-select" id="f-modelo" onchange="applyFilters(this)">
-    <option value="">Modelo</option>
-  </select>
-  <div class="cor-wrap">
-    <button class="cor-trigger" id="f-cor-trigger" onclick="toggleCorDropdown()">
-      <span id="f-cor-dot"></span>
-      <span id="f-cor-label">Cor</span>
-    </button>
-    <div class="cor-dropdown" id="f-cor-dropdown"></div>
+<div class="filters-wrap" id="filters-wrap">
+  <div class="filters">
+    <select class="filter-select" id="f-comercial" onchange="applyFilters(this)">
+      <option value="">Marca Comercial</option>
+    </select>
+    <select class="filter-select" id="f-marca" onchange="applyFilters(this)">
+      <option value="">Marca do Carro</option>
+    </select>
+    <select class="filter-select" id="f-modelo" onchange="applyFilters(this)">
+      <option value="">Modelo</option>
+    </select>
+    <div class="cor-wrap">
+      <button class="cor-trigger" id="f-cor-trigger" onclick="toggleCorDropdown()">
+        <span id="f-cor-dot"></span>
+        <span id="f-cor-label">Cor</span>
+      </button>
+      <div class="cor-dropdown" id="f-cor-dropdown"></div>
+    </div>
+    <button class="btn-clear" id="btn-clear" onclick="clearFilters()">✕ Limpar filtros</button>
   </div>
-  <button class="btn-clear" id="btn-clear" onclick="clearFilters()">✕ Limpar filtros</button>
 </div>
 
-<div class="results-bar" id="results-bar"></div>
+<div class="list-toolbar">
+  <span class="results-text" id="results-bar"></span>
+  <button class="sort-btn" id="sort-btn" onclick="toggleSort()">⇅ A–Z</button>
+</div>
+
 <div class="car-list" id="car-list">
   <div class="state-message"><div class="icon">⏳</div><p>Carregando coleção...</p></div>
 </div>
 
+<!-- Modal detalhe -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
-  <div class="modal">
+  <div class="modal" id="modal-inner">
     <div class="modal-handle"></div>
     <div class="modal-name" id="m-name"></div>
     <div class="modal-tags" id="m-tags"></div>
+    <div class="modal-date" id="m-date"></div>
     <div id="m-photos"></div>
   </div>
 </div>
 
+<!-- Foto tela cheia -->
 <div class="fullscreen-overlay" id="fullscreen" onclick="closeFullscreen()">
   <img id="fullscreen-img" src="" alt="">
   <button class="fullscreen-close" onclick="closeFullscreen()">×</button>
+</div>
+
+<!-- Stats -->
+<div class="stats-overlay" id="stats-overlay" onclick="closeStats(event)">
+  <div class="stats-panel">
+    <div class="modal-handle"></div>
+    <div class="stats-title">📊 Estatísticas da Coleção</div>
+    <div id="stats-content"></div>
+  </div>
 </div>
 
 <script>
@@ -470,21 +553,25 @@ const COR_MAP = {
   'cobre':        '#b05010',
 };
 
-function corDot(cor) {
+function corDot(cor, size = 9) {
   if (!cor) return '';
   const hex = COR_MAP[cor.toLowerCase()] || '#555';
-  return `<span class="color-dot" style="background:${hex}"></span>`;
+  return `<span class="color-dot" style="background:${hex};width:${size}px;height:${size}px"></span>`;
 }
 
 let allCars    = [];
 let statusMode = 'todos';
+let sortAZ     = false;
+let selectedCor = '';
 
+// ── INIT & REFRESH ──────────────────────────────
 async function init() {
   try {
-    const res  = await fetch(SHEET_CSV_URL);
+    const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
     const text = await res.text();
     allCars = parseCSV(text);
     buildFilters();
+    updateTabCounts();
     applyFilters();
     const tem  = allCars.filter(c => c.status !== 'quer').length;
     const quer = allCars.filter(c => c.status === 'quer').length;
@@ -497,6 +584,16 @@ async function init() {
   }
 }
 
+async function refreshData() {
+  const btn = document.getElementById('btn-refresh');
+  btn.style.opacity = '0.4';
+  btn.style.pointerEvents = 'none';
+  await init();
+  btn.style.opacity = '';
+  btn.style.pointerEvents = '';
+}
+
+// ── CSV ─────────────────────────────────────────
 function parseCSV(raw) {
   const rows    = raw.trim().split('\n');
   const headers = splitLine(rows[0]).map(h => h.trim());
@@ -518,6 +615,7 @@ function splitLine(line) {
   out.push(cur); return out;
 }
 
+// ── FILTERS ─────────────────────────────────────
 const FILTER_MAP = {
   'f-comercial': 'marca_comercial',
   'f-marca':     'marca_carro',
@@ -529,8 +627,6 @@ const FILTER_LABELS = {
   'f-modelo':    'Modelo',
 };
 
-let selectedCor = '';
-
 function buildFilters() {
   Object.entries(FILTER_MAP).forEach(([id, field]) => {
     const sel    = document.getElementById(id);
@@ -539,23 +635,30 @@ function buildFilters() {
       values.map(v => `<option value="${v}">${v}</option>`).join('');
   });
 
-  // Dropdown customizado de Cor
   const cores = [...new Set(allCars.map(c => c.cor).filter(Boolean))].sort();
   const drop  = document.getElementById('f-cor-dropdown');
   drop.innerHTML =
-    `<div class="cor-option" onclick="pickCor('')"><span class="color-dot" style="background:#333;border-color:#555"></span>Todas as cores</div>` +
+    `<div class="cor-option" onclick="pickCor('')"><span class="color-dot" style="background:#333;border-color:#555;width:12px;height:12px"></span>Todas as cores</div>` +
     cores.map(cor => {
       const hex = COR_MAP[cor.toLowerCase()] || '#555';
       return `<div class="cor-option" data-cor="${cor}" onclick="pickCor('${cor.replace(/'/g,"\\'")}')">
-        <span class="color-dot" style="background:${hex}"></span>${cor}
+        <span class="color-dot" style="background:${hex};width:12px;height:12px"></span>${cor}
       </div>`;
     }).join('');
+}
+
+function updateTabCounts() {
+  const todos = allCars.length;
+  const tem   = allCars.filter(c => c.status !== 'quer').length;
+  const quer  = allCars.filter(c => c.status === 'quer').length;
+  document.getElementById('cnt-todos').textContent = ` (${todos})`;
+  document.getElementById('cnt-tem').textContent   = ` (${tem})`;
+  document.getElementById('cnt-quer').textContent  = ` (${quer})`;
 }
 
 function toggleCorDropdown() {
   const drop = document.getElementById('f-cor-dropdown');
   drop.classList.toggle('open');
-  // fecha ao clicar fora
   if (drop.classList.contains('open')) {
     setTimeout(() => document.addEventListener('click', closeCorOnOutside), 0);
   }
@@ -571,36 +674,45 @@ function pickCor(cor) {
   selectedCor = cor;
   document.getElementById('f-cor-dropdown').classList.remove('open');
   document.removeEventListener('click', closeCorOnOutside);
-
   const trigger = document.getElementById('f-cor-trigger');
   const dotEl   = document.getElementById('f-cor-dot');
   const labelEl = document.getElementById('f-cor-label');
-
-  // Atualiza selected nos itens
   document.querySelectorAll('.cor-option').forEach(el =>
     el.classList.toggle('selected', el.dataset.cor === cor)
   );
-
   if (cor) {
     const hex = COR_MAP[cor.toLowerCase()] || '#555';
-    dotEl.innerHTML   = `<span class="color-dot" style="background:${hex};width:12px;height:12px"></span>`;
+    dotEl.innerHTML     = `<span class="color-dot" style="background:${hex};width:12px;height:12px"></span>`;
     labelEl.textContent = cor;
     trigger.classList.add('active');
   } else {
-    dotEl.innerHTML   = '';
+    dotEl.innerHTML     = '';
     labelEl.textContent = 'Cor';
     trigger.classList.remove('active');
   }
   applyFilters();
 }
 
+// ── STATUS ──────────────────────────────────────
 function setStatus(mode) {
   statusMode = mode;
   document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + mode).classList.add('active');
+  const showWA = mode === 'quer' && allCars.filter(c => c.status === 'quer').length > 0;
+  document.getElementById('btn-whatsapp').classList.toggle('visible', showWA);
   applyFilters();
 }
 
+// ── SORT ────────────────────────────────────────
+function toggleSort() {
+  sortAZ = !sortAZ;
+  const btn = document.getElementById('sort-btn');
+  btn.textContent = sortAZ ? '⇅ Recentes' : '⇅ A–Z';
+  btn.classList.toggle('active', sortAZ);
+  applyFilters();
+}
+
+// ── APPLY FILTERS ───────────────────────────────
 function applyFilters(changed) {
   if (changed) changed.classList.toggle('active', changed.value !== '');
 
@@ -625,6 +737,8 @@ function applyFilters(changed) {
     return true;
   });
 
+  if (sortAZ) filtered = [...filtered].sort((a, b) => (a.modelo || '').localeCompare(b.modelo || '', 'pt-BR'));
+
   render(filtered);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -641,6 +755,7 @@ function clearFilters() {
   applyFilters();
 }
 
+// ── RENDER ──────────────────────────────────────
 function render(cars) {
   const list = document.getElementById('car-list');
   const bar  = document.getElementById('results-bar');
@@ -651,7 +766,7 @@ function render(cars) {
 
   bar.textContent = cars.length < base.length
     ? `${cars.length} de ${base.length} carrinhos`
-    : '';
+    : `${cars.length} carrinho${cars.length !== 1 ? 's' : ''}`;
 
   if (!cars.length) {
     list.innerHTML = '<div class="state-message"><div class="icon">🔍</div><p>Nenhum carrinho encontrado</p></div>';
@@ -673,7 +788,7 @@ function render(cars) {
 
     return `
       <div class="car-card${isWish ? ' quer' : ''}" onclick="openModal(${idx})">
-        ${isWish ? '<span class="wish-badge">🔍 Estamos procurando</span>' : ''}
+        ${isWish ? '<span class="wish-badge">🔍 Procurando</span>' : ''}
         <div class="car-info">
           <div class="car-name">${car.modelo || '—'}</div>
           <div class="car-tags">${tags}</div>
@@ -683,6 +798,7 @@ function render(cars) {
   }).join('');
 }
 
+// ── MODAL ───────────────────────────────────────
 function openModal(idx) {
   const car    = allCars[idx];
   const isWish = car.status === 'quer';
@@ -691,9 +807,11 @@ function openModal(idx) {
   document.getElementById('m-tags').innerHTML = [
     car.marca_comercial && `<span class="modal-tag comercial">${car.marca_comercial}</span>`,
     car.marca_carro     && `<span class="modal-tag">${car.marca_carro}</span>`,
-    car.cor             && `<span class="modal-tag">${car.cor}</span>`,
+    car.cor             && `<span class="modal-tag">${corDot(car.cor, 11)}${car.cor}</span>`,
     isWish              && `<span class="modal-tag quer">🎁 Estamos procurando</span>`
   ].filter(Boolean).join('');
+
+  document.getElementById('m-date').textContent = car.data_adicao ? `Adicionado em ${car.data_adicao}` : '';
 
   document.getElementById('m-photos').innerHTML = car.foto_carroceria
     ? `<img class="modal-photo" src="${car.foto_carroceria}" alt="${car.modelo}" onclick="openFullscreen('${car.foto_carroceria}')">
@@ -702,6 +820,7 @@ function openModal(idx) {
 
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  initSwipe();
 }
 
 function closeModal(e) {
@@ -710,13 +829,123 @@ function closeModal(e) {
   document.body.style.overflow = '';
 }
 
+// ── SWIPE PARA FECHAR MODAL ─────────────────────
+function initSwipe() {
+  const inner = document.getElementById('modal-inner');
+  let startY = 0;
+  inner.ontouchstart = e => { startY = e.touches[0].clientY; };
+  inner.ontouchmove  = e => {
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0) inner.style.transform = `translateY(${dy}px)`;
+  };
+  inner.ontouchend   = e => {
+    const dy = e.changedTouches[0].clientY - startY;
+    inner.style.transform = '';
+    if (dy > 80) {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
+}
+
+// ── FULLSCREEN ──────────────────────────────────
 function openFullscreen(url) {
   document.getElementById('fullscreen-img').src = url;
   document.getElementById('fullscreen').classList.add('open');
 }
-
 function closeFullscreen() {
   document.getElementById('fullscreen').classList.remove('open');
+}
+
+// ── WHATSAPP SHARE ──────────────────────────────
+function shareWhatsApp() {
+  const lista = allCars.filter(c => c.status === 'quer');
+  if (!lista.length) return;
+  const linhas = lista.map(c => `• ${c.modelo}${c.marca_carro ? ' (' + c.marca_carro + ')' : ''}${c.cor ? ' — ' + c.cor : ''}`).join('\n');
+  const msg = `🚗 *JP Garage — Lista de carrinhos que o João está procurando:*\n\n${linhas}\n\n🔗 Ver coleção: rocarniel.github.io/colecao-joao`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ── FILTROS COLAPSÁVEIS AO ROLAR ────────────────
+let lastScrollY  = 0;
+let filtersHidden = false;
+window.addEventListener('scroll', () => {
+  const y    = window.scrollY;
+  const wrap = document.getElementById('filters-wrap');
+  if (y > lastScrollY && y > 100 && !filtersHidden) {
+    wrap.classList.add('collapsed');
+    filtersHidden = true;
+  } else if (y < lastScrollY - 10 && filtersHidden) {
+    wrap.classList.remove('collapsed');
+    filtersHidden = false;
+  }
+  lastScrollY = y;
+}, { passive: true });
+
+// ── ESTATÍSTICAS ────────────────────────────────
+function openStats() {
+  const tem  = allCars.filter(c => c.status !== 'quer');
+  const quer = allCars.filter(c => c.status === 'quer');
+
+  const count = (arr, field) => {
+    const map = {};
+    arr.forEach(c => { if (c[field]) map[c[field]] = (map[c[field]] || 0) + 1; });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+  };
+
+  const maxVal = (entries) => entries.length ? entries[0][1] : 1;
+
+  const renderRows = (entries, field) => {
+    const max = maxVal(entries);
+    return entries.slice(0, 8).map(([name, val]) => {
+      const pct  = Math.round((val / max) * 100);
+      const dot  = field === 'cor' ? corDot(name, 11) : '';
+      return `<div class="stats-row">
+        <span class="name">${dot}${name}</span>
+        <div class="stats-bar-wrap"><div class="stats-bar" style="width:${pct}%"></div></div>
+        <span class="val">${val}</span>
+      </div>`;
+    }).join('');
+  };
+
+  const marcas = count(allCars, 'marca_comercial');
+  const carros = count(allCars, 'marca_carro');
+  const cores  = count(allCars, 'cor');
+
+  document.getElementById('stats-content').innerHTML = `
+    <div class="stats-section">
+      <div class="stats-row" style="border-bottom:1px solid #2a2a2a">
+        <span class="name">Total na coleção</span><span class="val">${allCars.length}</span>
+      </div>
+      <div class="stats-row" style="border-bottom:1px solid #2a2a2a">
+        <span class="name">Já tem</span><span class="val">${tem.length}</span>
+      </div>
+      <div class="stats-row">
+        <span class="name">🔍 Procurando</span><span class="val">${quer.length}</span>
+      </div>
+    </div>
+    <div class="stats-section">
+      <div class="stats-section-label">Marca Comercial</div>
+      ${renderRows(marcas, 'marca_comercial')}
+    </div>
+    <div class="stats-section">
+      <div class="stats-section-label">Marca do Carro</div>
+      ${renderRows(carros, 'marca_carro')}
+    </div>
+    <div class="stats-section">
+      <div class="stats-section-label">Cores</div>
+      ${renderRows(cores, 'cor')}
+    </div>
+  `;
+
+  document.getElementById('stats-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStats(e) {
+  if (e && e.target !== document.getElementById('stats-overlay')) return;
+  document.getElementById('stats-overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 init();
