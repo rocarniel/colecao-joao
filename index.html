@@ -657,22 +657,28 @@ function updateTabCounts() {
 }
 
 function toggleCorDropdown() {
-  const drop = document.getElementById('f-cor-dropdown');
+  const drop     = document.getElementById('f-cor-dropdown');
+  const fwrap    = document.getElementById('filters-wrap');
   drop.classList.toggle('open');
   if (drop.classList.contains('open')) {
+    fwrap.style.overflow = 'visible';
     setTimeout(() => document.addEventListener('click', closeCorOnOutside), 0);
+  } else {
+    fwrap.style.overflow = '';
   }
 }
 function closeCorOnOutside(e) {
   const wrap = document.querySelector('.cor-wrap');
   if (!wrap.contains(e.target)) {
     document.getElementById('f-cor-dropdown').classList.remove('open');
+    document.getElementById('filters-wrap').style.overflow = '';
     document.removeEventListener('click', closeCorOnOutside);
   }
 }
 function pickCor(cor) {
   selectedCor = cor;
   document.getElementById('f-cor-dropdown').classList.remove('open');
+  document.getElementById('filters-wrap').style.overflow = '';
   document.removeEventListener('click', closeCorOnOutside);
   const trigger = document.getElementById('f-cor-trigger');
   const dotEl   = document.getElementById('f-cor-dot');
