@@ -97,3 +97,7 @@ function doGet() {
     .createTextOutput(JSON.stringify({ status: 'online', app: 'JP Garage v2' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+function renomearPlanilha() {
+  SpreadsheetApp.getActiveSpreadsheet().rename('JP Garage — Coleção do João');
+}
