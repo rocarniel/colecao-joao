@@ -386,6 +386,8 @@ const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxz
 const SHEET_CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
 // ─────────────────────────────────────────────────
 
+const toTitleCase = s => s.replace(/\S+/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+
 let carData    = [];
 let photos     = { carroceria: null };
 let photoURLs  = { carroceria: '' };
@@ -464,10 +466,10 @@ async function identificarPorIA(input) {
 
 function iaConfirmar() {
   if (!iaPendente) return;
-  document.getElementById('i-comercial').value = iaPendente.marca_comercial || '';
-  document.getElementById('i-marca').value     = iaPendente.marca_carro     || '';
-  document.getElementById('i-modelo').value    = iaPendente.modelo          || '';
-  document.getElementById('i-cor').value       = iaPendente.cor             || '';
+  document.getElementById('i-comercial').value = toTitleCase(iaPendente.marca_comercial || '');
+  document.getElementById('i-marca').value     = toTitleCase(iaPendente.marca_carro     || '');
+  document.getElementById('i-modelo').value    = toTitleCase(iaPendente.modelo          || '');
+  document.getElementById('i-cor').value       = toTitleCase(iaPendente.cor             || '');
   iaPendente = null;
   document.getElementById('ia-confirm-overlay').style.display = 'none';
   toast('✅ Campos preenchidos pela IA');
@@ -590,10 +592,10 @@ function handlePhoto(input, type) {
 
 // ══ SAVE / UPDATE ═════════════════════════════
 async function salvar() {
-  const comercial = document.getElementById('i-comercial').value.trim();
-  const marca     = document.getElementById('i-marca').value.trim();
-  const modelo    = document.getElementById('i-modelo').value.trim();
-  const cor       = document.getElementById('i-cor').value.trim();
+  const comercial = toTitleCase(document.getElementById('i-comercial').value.trim());
+  const marca     = toTitleCase(document.getElementById('i-marca').value.trim());
+  const modelo    = toTitleCase(document.getElementById('i-modelo').value.trim());
+  const cor       = toTitleCase(document.getElementById('i-cor').value.trim());
 
   if (!comercial) { toast('⚠️ Informe a Marca Comercial.'); return; }
   if (!marca)     { toast('⚠️ Informe a Marca do Carro.');  return; }
