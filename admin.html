@@ -617,8 +617,8 @@ async function salvar() {
     setLoadingText('Salvando no catálogo...');
 
     const payload = {
-      action:          (editUID !== null && editUID !== '') ? 'update' : 'add',
-      uid:             (editUID !== null && editUID !== '') ? editUID : String(Date.now()),
+      action:          editUID !== null ? 'update' : 'add',
+      uid:             editUID !== null ? editUID : String(Date.now()),
       marca_comercial: comercial,
       marca_carro:     marca,
       modelo,
@@ -634,7 +634,7 @@ async function salvar() {
     });
 
     setLoading(false);
-    toast((editUID !== null && editUID !== '') ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
+    toast(editUID !== null ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
     resetForm();
     await loadData();
 
