@@ -379,7 +379,6 @@
 <script>
 // ─────────────────────────────────────────────────
 const ADMIN_PASSWORD    = '159075';
-const ANTHROPIC_API_KEY = localStorage.getItem('jp_anthropic_key') || '';
 const CLOUDINARY_CLOUD  = 'djyrz7jf5';
 const CLOUDINARY_PRESET = 'jm2bpefb';
 const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxzVoynQsNPfmFMaYZyS4qU2VaqNuzZTfXZuDrdDlaS3VWRj3JeMLPhuLSA/exec';
@@ -434,7 +433,7 @@ async function identificarPorIA(input) {
         messages: [{
           role: 'user',
           content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+            { type: 'image', source: { type: 'base64', media_type: file.type || 'image/jpeg', data: b64 } },
             { type: 'text', text: `Esta é a base/etiqueta de um carrinho miniatura (Hot Wheels, Matchbox, etc). Identifique e responda SOMENTE com JSON válido, sem markdown:
 {"marca_comercial":"Hot Wheels ou Matchbox ou outra","marca_carro":"fabricante real do carro ex Ford, Ferrari","modelo":"nome exato do modelo","cor":"cor predominante em português","confianca":"alta/média/baixa"}` }
           ]
@@ -445,14 +444,20 @@ async function identificarPorIA(input) {
     if (!resp.ok) throw new Error('API erro ' + resp.status);
     const data = await resp.json();
     const text = data.content[0].text.trim();
-    const json = JSON.parse(text.replace(/```json|```/g, '').trim());
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Resposta sem JSON válido');
+    const json = JSON.parse(jsonMatch[0]);
 
     iaPendente = json;
-    document.getElementById('ia-result-preview').innerHTML =
-      `<b>Marca Comercial:</b> ${json.marca_comercial}<br>` +
-      `<b>Marca do Carro:</b> ${json.marca_carro}<br>` +
-      `<b>Modelo:</b> ${json.modelo}<br>` +
-      `<b>Cor:</b> ${json.cor}`;
+    const prev = document.getElementById('ia-result-preview');
+    prev.innerHTML = '';
+    [['Marca Comercial', json.marca_comercial], ['Marca do Carro', json.marca_carro],
+     ['Modelo', json.modelo], ['Cor', json.cor]].forEach(([label, val]) => {
+      const b = document.createElement('b'); b.textContent = label + ': ';
+      const span = document.createElement('span'); span.textContent = val || '';
+      const br = document.createElement('br');
+      prev.appendChild(b); prev.appendChild(span); prev.appendChild(br);
+    });
     document.getElementById('ia-confianca').textContent = `Confiança: ${json.confianca}`;
     document.getElementById('ia-confirm-overlay').style.display = 'flex';
 
@@ -612,8 +617,8 @@ async function salvar() {
     setLoadingText('Salvando no catálogo...');
 
     const payload = {
-      action:          editUID !== null ? 'update' : 'add',
-      uid:             editUID !== null ? editUID : String(Date.now()),
+      action:          (editUID !== null && editUID !== '') ? 'update' : 'add',
+      uid:             (editUID !== null && editUID !== '') ? editUID : String(Date.now()),
       marca_comercial: comercial,
       marca_carro:     marca,
       modelo,
@@ -629,7 +634,7 @@ async function salvar() {
     });
 
     setLoading(false);
-    toast(editUID !== null ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
+    toast((editUID !== null && editUID !== '') ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
     resetForm();
     await loadData();
 
