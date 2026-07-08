@@ -385,7 +385,9 @@ const APPS_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyTvQQG_iOQxz
 const SHEET_CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQy29Xt5vTxjnQMReg3w6DjswH4R0lM8Y7XSow1RuVsnoor0HMp4mw-LWvGMSMmH5JcDEGvCcS-aedK/pub?output=csv';
 // ─────────────────────────────────────────────────
 
-const toTitleCase = s => s.replace(/\S+/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+// Palavras já em MAIÚSCULAS (siglas, numerais romanos: II, NSX…) são preservadas
+const toTitleCase = s => s.replace(/\S+/g, w =>
+  w === w.toUpperCase() ? w : w[0].toUpperCase() + w.slice(1).toLowerCase());
 
 let carData    = [];
 let photos     = { carroceria: null };
