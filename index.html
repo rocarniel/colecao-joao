@@ -763,7 +763,9 @@ function applyFilters(changed) {
     return true;
   });
 
+  const parseDate = s => { if (!s) return 0; const [d,m,y] = s.split('/'); return new Date(+y,+m-1,+d).getTime(); };
   if (sortAZ) filtered = [...filtered].sort((a, b) => (a.modelo || '').localeCompare(b.modelo || '', 'pt-BR'));
+  else        filtered = [...filtered].sort((a, b) => parseDate(b.data_adicao) - parseDate(a.data_adicao));
 
   render(filtered);
   window.scrollTo({ top: 0, behavior: 'smooth' });
