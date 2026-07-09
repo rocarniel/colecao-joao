@@ -637,8 +637,18 @@ async function salvar() {
 
     setLoading(false);
     toast(editUID !== null ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
-    resetForm();
-    await loadData();
+    if (editUID !== null) {
+      const idx = carData.findIndex(c => String(c.uid) === String(payload.uid));
+      if (idx !== -1) {
+        carData[idx] = { ...carData[idx], ...payload };
+      }
+      resetForm();
+      renderAdminList();
+    } else {
+      resetForm();
+      carData.push({ ...payload, data_adicao: new Date().toLocaleDateString('pt-BR') });
+      renderAdminList();
+    }
 
   } catch (err) {
     setLoading(false);
@@ -702,17 +712,19 @@ function closeConfirm() {
 }
 async function confirmDelete() {
   if (!deleteUID) return;
+  const uid = deleteUID;
   closeConfirm();
   setLoading(true, 'Excluindo...');
   try {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'delete', uid: deleteUID })
+      body: JSON.stringify({ action: 'delete', uid: uid })
     });
     setLoading(false);
     toast('🗑️ Carrinho excluído.');
-    await loadData();
+    carData = carData.filter(c => String(c.uid) !== String(uid));
+    renderAdminList();
   } catch {
     setLoading(false);
     toast('❌ Erro ao excluir.');
