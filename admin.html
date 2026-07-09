@@ -629,11 +629,13 @@ async function salvar() {
       status:          statusForm
     };
 
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+    const saveRes = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
+    const saveJson = await saveRes.json();
+    if (!saveJson.ok) throw new Error(saveJson.erro || 'Erro no servidor');
 
     setLoading(false);
     toast(editUID !== null ? '✅ Carrinho atualizado!' : '✅ Carrinho salvo!');
@@ -716,18 +718,20 @@ async function confirmDelete() {
   closeConfirm();
   setLoading(true, 'Excluindo...');
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+    const delRes = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'delete', uid: uid })
     });
+    const delJson = await delRes.json();
+    if (!delJson.ok) throw new Error(delJson.erro || 'Erro no servidor');
     setLoading(false);
     toast('🗑️ Carrinho excluído.');
     carData = carData.filter(c => String(c.uid) !== String(uid));
     renderAdminList();
-  } catch {
+  } catch (err) {
     setLoading(false);
-    toast('❌ Erro ao excluir.');
+    toast('❌ Erro ao excluir: ' + err.message);
   }
 }
 
