@@ -508,7 +508,7 @@ if (sessionStorage.getItem('jp_admin')) showPanel();
 // ══ DATA ══════════════════════════════════════
 async function loadData() {
   try {
-    const res  = await fetch(SHEET_CSV_URL);
+    const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
     const text = await res.text();
     carData = parseCSV(text);
     renderAdminList();
@@ -567,9 +567,11 @@ function acFilter(inputId, dropId, field) {
   const all     = [...new Set(source.map(c => c[field]).filter(Boolean))].sort();
   const matches = all.filter(v => v.toLowerCase().startsWith(query));
   if (!matches.length) { drop.classList.remove('open'); return; }
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   drop.innerHTML = matches.map(v => {
-    const hi = v.replace(new RegExp(`^(${query})`, 'gi'), '<mark>$1</mark>');
-    return `<div class="ac-item" onmousedown="acPick('${inputId}','${dropId}','${v.replace(/'/g,"\\'")}')">
+    const hi   = v.replace(new RegExp(`^(${escapedQuery})`, 'gi'), '<mark>$1</mark>');
+    const safeV = v.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `<div class="ac-item" onpointerdown="event.preventDefault();acPick('${inputId}','${dropId}','${safeV}')">
               ${hi}
             </div>`;
   }).join('');
@@ -577,10 +579,10 @@ function acFilter(inputId, dropId, field) {
 }
 function acPick(inputId, dropId, value) {
   document.getElementById(inputId).value = value;
-  acClose(dropId);
+  document.getElementById(dropId).classList.remove('open');
 }
 function acClose(dropId) {
-  setTimeout(() => { const el = document.getElementById(dropId); if (el) el.classList.remove('open'); }, 150);
+  setTimeout(() => { const el = document.getElementById(dropId); if (el) el.classList.remove('open'); }, 200);
 }
 
 // ══ PHOTOS ════════════════════════════════════
@@ -654,18 +656,12 @@ async function salvar() {
 
   } catch (err) {
     setLoading(false);
-    toast('❌ Erro ao salvar. Tente novamente.');
+    toast('❌ ' + (err.message || 'Erro ao salvar. Tente novamente.'));
     console.error(err);
   }
 }
 
 // ══ EDIT ══════════════════════════════════════
-function editCarByIdx(idx) {
-  const car = carData[idx];
-  if (!car) return;
-  editCarCore(car);
-}
-
 function editCar(uid) {
   const car = carData.find(c => String(c.uid) === String(uid));
   if (!car) return;
@@ -761,7 +757,6 @@ function renderAdminList() {
   }
 
   list.innerHTML = filtered.map(car => {
-    const realIdx = carData.indexOf(car);
     const thumb = car.foto_carroceria
       ? `<img class="admin-thumb" src="${car.foto_carroceria}" alt="">`
       : `<div class="admin-thumb-empty">🚗</div>`;
@@ -778,7 +773,7 @@ function renderAdminList() {
           ${wish}
         </div>
         <div class="admin-actions">
-          <button class="btn-edit" onclick="editCarByIdx(${realIdx})">✏️</button>
+          <button class="btn-edit" onclick="editCar('${car.uid}')">✏️</button>
           <button class="btn-del"  onclick="askDelete('${car.uid}','${safeNome}')">🗑️</button>
         </div>
       </div>`;

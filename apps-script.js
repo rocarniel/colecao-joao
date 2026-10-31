@@ -7,7 +7,7 @@
 function doPost(e) {
   try {
     const data  = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const sheet = SpreadsheetApp.openById('19tvuVgl1DJcJ978Rk4M5l3GHWd2Rm-tzmeGDJddjirI').getActiveSheet();
 
     ensureColumns(sheet);
 
