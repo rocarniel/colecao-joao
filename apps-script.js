@@ -42,6 +42,19 @@ function doPost(e) {
 
     } else {
       const uid = data.uid || String(Date.now());
+      // Se o UID já existe, a operação foi duplicada (rede caiu após salvar).
+      // Retorna ok sem inserir novamente.
+      const uidCol = headers.indexOf('uid');
+      if (uidCol >= 0) {
+        const existentes = sheet.getDataRange().getValues();
+        for (let i = 1; i < existentes.length; i++) {
+          if (String(existentes[i][uidCol]) === String(uid)) {
+            return ContentService
+              .createTextOutput(JSON.stringify({ ok: true }))
+              .setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+      }
       const map = {
         data_adicao:     new Date().toLocaleDateString('pt-BR'),
         marca_comercial: data.marca_comercial || '',

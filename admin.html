@@ -205,7 +205,8 @@
       transform: translateX(-50%) translateY(80px);
       background: #1c1c1e; color: white; padding: 13px 22px;
       border-radius: 30px; font-size: 14px; font-weight: 500;
-      z-index: 1000; white-space: nowrap;
+      z-index: 1000; max-width: calc(100vw - 40px);
+      text-align: center; word-break: break-word;
       transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
       pointer-events: none;
     }
@@ -477,6 +478,8 @@ function iaConfirmar() {
   document.getElementById('i-marca').value     = toTitleCase(iaPendente.marca_carro     || '');
   document.getElementById('i-modelo').value    = toTitleCase(iaPendente.modelo          || '');
   document.getElementById('i-cor').value       = toTitleCase(iaPendente.cor             || '');
+  ['ac-comercial','ac-marca','ac-modelo','ac-cor'].forEach(id =>
+    document.getElementById(id).classList.remove('open'));
   iaPendente = null;
   document.getElementById('ia-confirm-overlay').style.display = 'none';
   toast('✅ Campos preenchidos pela IA');
@@ -512,7 +515,12 @@ async function loadData() {
     const text = await res.text();
     carData = parseCSV(text);
     renderAdminList();
-  } catch { toast('⚠️ Erro ao carregar dados.'); }
+  } catch {
+    toast('⚠️ Erro ao carregar dados.');
+    document.getElementById('admin-car-list').innerHTML =
+      '<div class="state-message"><div class="icon">⚠️</div><p>Falha ao carregar a coleção.</p>' +
+      '<button onclick="loadData()" style="margin-top:14px;padding:11px 24px;background:#e84118;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Tentar novamente</button></div>';
+  }
 }
 
 function parseCSV(raw) {
@@ -805,7 +813,10 @@ async function compressImg(file, maxW = 1200, quality = 0.82) {
       canvas.height = Math.round(img.height * scale);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+      canvas.toBlob(blob => {
+        if (!blob) { reject(new Error('Falha ao comprimir imagem')); return; }
+        resolve(blob);
+      }, 'image/jpeg', quality);
     };
     img.src = url;
   });
